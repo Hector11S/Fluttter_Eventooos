@@ -50,15 +50,17 @@ class _PaquetesState extends State<Paquetes> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionTitle(
-            title: "Paquetes",
-            press: () {
-              Navigator.pushNamed(context, Utilerias.routeName);
-            },
-          ),
-        ),
+    Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 20),
+  child: SectionTitle(
+    title: "Paquetes",
+    press: () {
+      Navigator.pushNamed(context, Utilerias.routeName);
+    },
+  ),
+),
+
+
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -80,7 +82,7 @@ class _PaquetesState extends State<Paquetes> {
   }
 }
 
-class SpecialOfferCard extends StatelessWidget {
+class SpecialOfferCard extends StatefulWidget {
   const SpecialOfferCard({
     Key? key,
     required this.category,
@@ -95,57 +97,89 @@ class SpecialOfferCard extends StatelessWidget {
   final bool isFirst;
 
   @override
+  _SpecialOfferCardState createState() => _SpecialOfferCardState();
+}
+
+class _SpecialOfferCardState extends State<SpecialOfferCard> {
+  bool showUtilerias = false;
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(isFirst ? 20 : 10, 5, 10, 5),
-      child: GestureDetector(
-        onTap: press,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.6,
-          height: 200,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black54,
-                        Colors.black38,
-                        Colors.black26,
-                        Colors.transparent,
-                      ],
-                    ),
+      padding: EdgeInsets.fromLTRB(widget.isFirst ? 20 : 10, 5, 10, 5),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        height: showUtilerias ? 250 : 115, // Ajusta la altura según si las utilerías están visibles o no
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.fromRGBO(184, 134, 11, 1.0), // Dorado más oscuro
+                      Color.fromRGBO(218, 165, 32, 1.0), // Dorado
+                      Color.fromRGBO(218, 165, 32, 1.0), // Dorado
+                      Color.fromRGBO(218, 165, 32, 1.0), // Dorado
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        TextSpan(
-                          text: "$category\n",
+                        Icon(Icons.shopping_bag, color: Colors.white), // Icono agregado
+                        SizedBox(width: 5), // Espacio entre el icono y el texto
+                        Text(
+                          widget.category,
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
-                        for (var utileria in utilerias)
-                          TextSpan(text: "$utileria\n"),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 10),
+                    if (showUtilerias)
+                      for (var utileria in widget.utilerias)
+                        Text(
+                          utileria.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                    Spacer(),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            showUtilerias = !showUtilerias;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 87, 169, 236), // Cambia Colors.blue por el color que desees
+                        ),
+                        child: Text(
+                          showUtilerias ? "Ocultar detalles" : "Detalles",
+                          style: TextStyle(color: Colors.white), // Cambia Colors.white por el color que desees
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

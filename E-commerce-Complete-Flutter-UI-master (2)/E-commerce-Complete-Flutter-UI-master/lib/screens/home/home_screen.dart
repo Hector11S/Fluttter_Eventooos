@@ -1,7 +1,7 @@
   import 'package:flutter/material.dart';
 
  // import 'components/categories.dart';
-  import 'components/discount_banner.dart';
+  //import 'components/discount_banner.dart';
   import 'components/home_header.dart';
   //import 'components/popular_product.dart';
   import 'components/special_offers.dart';
@@ -21,12 +21,13 @@
             child: Column(
               children: [
                 HomeHeader(),
-                DiscountBanner(),       
+                Paquetes(),
+                //DiscountBanner(),       
                 SpecialOffers(),
                 SizedBox(height: 20),
                 UtileriasHome(),
                 SizedBox(height: 20),
-                Paquetes(),
+             
               ],
             ),
           ),
