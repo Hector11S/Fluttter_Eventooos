@@ -66,47 +66,45 @@ class _CategoriaSillaState extends State<CategoriaSilla> {
     );
   }
 
-   Widget _buildCategoriaItem(
-  String descripcion, String imagenUrl, double precio) {
-  return Card(
-    elevation: 3.0,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.network(
-          imagenUrl,
-          height: 80,
-          width: double.infinity,
-          fit: BoxFit.contain,
-        ),
-        SizedBox(height: 1),
-        Text(
-          descripcion,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
+  Widget _buildCategoriaItem(
+      String descripcion, String imagenUrl, double precio) {
+    return Card(
+      elevation: 3.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.network(
+            imagenUrl,
+            height: 80,
+            width: double.infinity,
+            fit: BoxFit.contain,
           ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          '\$$precio',
-          style: TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 195, 0, 255),
+          SizedBox(height: 1),
+          Text(
+            descripcion,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
-        ),
-        SizedBox(height: 5),
-        ElevatedButton(
-          onPressed: () {
-          
-          },
-          style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all(Size(150, 40)), 
+          SizedBox(height: 5),
+          Text(
+            '\L$precio',
+            style: TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 195, 0, 255),
+            ),
           ),
-          child: Text('Añadir al carrito'),
-        ),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 5),
+          ElevatedButton(
+            onPressed: () {},
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(Size(150, 40)),
+            ),
+            child: Text('Añadir al carrito'),
+          ),
+        ],
+      ),
+    );
+  }
 }

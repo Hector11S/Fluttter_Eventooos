@@ -81,7 +81,8 @@ class _TodasLasCategoriasState extends State<TodasLasCategorias> {
             category,
             style: TextStyle(
               fontSize: 20,
-              color: Colors.white,
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

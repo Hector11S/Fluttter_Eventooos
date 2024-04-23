@@ -23,10 +23,11 @@ class _PaquetesState extends State<Paquetes> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('http://www.gestioneventooooss.somee.com/API/Paquete/ListPaquetesMostrar'));
+    final response = await http.get(Uri.parse(
+        'http://www.gestioneventooooss.somee.com/API/Paquete/ListPaquetesMostrar'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      final List<dynamic> paquetesData = jsonData['data']; 
+      final List<dynamic> paquetesData = jsonData['data'];
 
       paquetesData.forEach((paquete) {
         final descripcion = paquete['paqe_Descripcion'];
@@ -69,7 +70,7 @@ class _PaquetesState extends State<Paquetes> {
                 category: descripcion,
                 utilerias: utilerias,
                 press: () {},
-                isFirst: paquetesUtilerias.keys.first == descripcion, 
+                isFirst: paquetesUtilerias.keys.first == descripcion,
               );
             }).toList(),
           ),
@@ -85,13 +86,13 @@ class SpecialOfferCard extends StatelessWidget {
     required this.category,
     required this.utilerias,
     required this.press,
-    this.isFirst = false, 
+    this.isFirst = false,
   }) : super(key: key);
 
   final String category;
-  final List<dynamic> utilerias; 
+  final List<dynamic> utilerias;
   final GestureTapCallback press;
-  final bool isFirst; 
+  final bool isFirst;
 
   @override
   Widget build(BuildContext context) {

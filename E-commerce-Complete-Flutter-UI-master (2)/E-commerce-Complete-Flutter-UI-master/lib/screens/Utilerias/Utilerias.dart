@@ -98,7 +98,7 @@ class _UtileriasState extends State<Utilerias> {
           ),
           SizedBox(height: 5),
           Text(
-            '\$$precio',
+            '\L$precio',
             style: TextStyle(
               fontSize: 14,
               color: Color.fromARGB(255, 0, 0, 0),

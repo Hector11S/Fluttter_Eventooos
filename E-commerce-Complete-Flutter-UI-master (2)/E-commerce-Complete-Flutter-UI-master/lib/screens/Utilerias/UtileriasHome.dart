@@ -60,7 +60,7 @@ class _UtileriasHomeState extends State<UtileriasHome> {
               return SpecialOfferCard(
                 image: utileria['util_Imagen'],
                 category: utileria['util_Descripcion'],
-                numOfBrands: '\$${utileria['util_Precio']}',
+                numOfBrands: '\L${utileria['util_Precio']}',
                 press: () {},
                 isFirst: index == 0,
               );
