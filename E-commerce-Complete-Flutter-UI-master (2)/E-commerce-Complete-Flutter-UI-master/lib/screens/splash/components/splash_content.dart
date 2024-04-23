@@ -30,7 +30,7 @@ class _SplashContentState extends State<SplashContent> {
         ),
         const SizedBox(height: 8),
         Image.asset(
-          "assets/images/logoooooooo.png",
+          "assets/images/estelogosi.png",
           width: 500,
           height: 220,
         ),
