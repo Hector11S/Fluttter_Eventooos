@@ -28,7 +28,7 @@ class SectionTitle extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: Color.fromARGB(255, 0, 0, 0),
             side:
-                BorderSide(color: Color.fromARGB(255, 177, 174, 174), width: 1),
+                BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1),
             backgroundColor: Color.fromARGB(255, 255, 255, 255),
           ),
           child: const Text("Ver más"),
