@@ -26,7 +26,6 @@ class UsuariosViewModel {
 }
 
 class BootstrapPagination extends StatelessWidget {
-  
   final int currentPage;
   final int totalPages;
   final Function(int) onPageChanged;
@@ -44,7 +43,8 @@ class BootstrapPagination extends StatelessWidget {
       children: [
         IconButton(
           icon: Icon(Icons.chevron_left),
-          onPressed: currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
+          onPressed:
+              currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
         ),
         Text(
           'Página $currentPage de $totalPages',
@@ -52,7 +52,9 @@ class BootstrapPagination extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(Icons.chevron_right),
-          onPressed: currentPage < totalPages ? () => onPageChanged(currentPage + 1) : null,
+          onPressed: currentPage < totalPages
+              ? () => onPageChanged(currentPage + 1)
+              : null,
         ),
       ],
     );
@@ -60,10 +62,9 @@ class BootstrapPagination extends StatelessWidget {
 }
 
 class WidgetUsuario extends StatefulWidget {
-  
   const WidgetUsuario({Key? key});
 
- static String routeName = "/profile";
+  static String routeName = "/profile";
   @override
   State<WidgetUsuario> createState() => _MyWidgetState();
 }
@@ -90,7 +91,8 @@ class _MyWidgetState extends State<WidgetUsuario> {
   }
 
   Future<void> _eliminarUsuario(int usua_Id) async {
-    final deleteUrl = "http://www.gestioneventooooss.somee.com/Api/Usuario/Delete/$usua_Id";
+    final deleteUrl =
+        "http://www.gestioneventooooss.somee.com/Api/Usuario/Delete/$usua_Id";
     final response = await http.delete(Uri.parse(deleteUrl));
 
     if (response.statusCode == 200) {
@@ -114,7 +116,7 @@ class _MyWidgetState extends State<WidgetUsuario> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CrearUsuarioView()), 
+                MaterialPageRoute(builder: (context) => CrearUsuarioView()),
               );
             },
           ),
@@ -122,7 +124,8 @@ class _MyWidgetState extends State<WidgetUsuario> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0), // Espacio a los lados
+          padding:
+              EdgeInsets.symmetric(horizontal: 20.0), // Espacio a los lados
           child: Column(
             children: [
               SingleChildScrollView(
@@ -162,7 +165,9 @@ class _MyWidgetState extends State<WidgetUsuario> {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => EditarUsuarioView(userId: user.usuarId)),
+                                    MaterialPageRoute(
+                                        builder: (context) => EditarUsuarioView(
+                                            userId: user.usuarId)),
                                   );
                                 },
                                 child: const Text(
@@ -189,12 +194,10 @@ class _MyWidgetState extends State<WidgetUsuario> {
                 ),
               ),
               SizedBox(height: 20), // Espacio entre la tabla y la paginación
-              BootstrapPagination( // Widget de paginación
+              BootstrapPagination(
                 currentPage: 1, // Cambia por el número de página actual
                 totalPages: 10, // Cambia por el número total de páginas
-                onPageChanged: (page) {
-                  // Lógica para cambiar de página
-                },
+                onPageChanged: (page) {},
               ),
             ],
           ),
@@ -233,6 +236,3 @@ class _MyWidgetState extends State<WidgetUsuario> {
     }
   }
 }
-
-
-

@@ -122,14 +122,15 @@ class _CategoriaMesasState extends State<CategoriaMesas> {
         ElevatedButton(
           onPressed: () {},
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 241, 161, 124)),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             minimumSize: MaterialStateProperty.all(Size(150, 40)),
           ),
           child: Text('Añadir al carrito'),
         ),
-        SizedBox(height: 10), 
-        Divider(), 
+        SizedBox(height: 10),
+        Divider(),
       ],
     );
   }

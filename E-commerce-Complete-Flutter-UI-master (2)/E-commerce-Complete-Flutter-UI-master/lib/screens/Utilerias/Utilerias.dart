@@ -16,7 +16,7 @@ class _UtileriasState extends State<Utilerias> {
       "http://www.gestioneventooooss.somee.com/Api/Utileria/API/Utileria/ListUtilerias";
 
   late List<dynamic> _productos = [];
-  late List<dynamic> _productosFiltrados = []; 
+  late List<dynamic> _productosFiltrados = [];
   late TextEditingController _searchController;
   late ScrollController _scrollController;
 
@@ -40,7 +40,7 @@ class _UtileriasState extends State<Utilerias> {
     if (result.statusCode == 200) {
       setState(() {
         _productos = jsonDecode(result.body)['data'];
-        _productosFiltrados = List.from(_productos); 
+        _productosFiltrados = List.from(_productos);
       });
     } else {
       print("Error en el Endpoint");
@@ -115,7 +115,7 @@ class _UtileriasState extends State<Utilerias> {
           ),
         ),
         Text(
-          '\$${precio.toStringAsFixed(2)}',
+          '\L${precio.toStringAsFixed(2)}',
           style: TextStyle(
             fontSize: 14,
             color: Color.fromARGB(255, 0, 0, 0),
@@ -128,14 +128,15 @@ class _UtileriasState extends State<Utilerias> {
             _addToCart(descripcion, imagenUrl, precio);
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromARGB(255, 241, 161, 124)),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             minimumSize: MaterialStateProperty.all(Size(120, 40)),
           ),
           child: Text('Añadir al carrito'),
         ),
-        SizedBox(height: 10), 
-        Divider(), 
+        SizedBox(height: 10),
+        Divider(),
       ],
     );
   }
@@ -205,8 +206,9 @@ class _SearchDelegate extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     final suggestionList = query.isEmpty
         ? []
-        : productos.where((producto) { 
-            final descripcion = producto['util_Descripcion'].toString().toLowerCase();
+        : productos.where((producto) {
+            final descripcion =
+                producto['util_Descripcion'].toString().toLowerCase();
             return descripcion.contains(query.toLowerCase());
           }).toList();
 

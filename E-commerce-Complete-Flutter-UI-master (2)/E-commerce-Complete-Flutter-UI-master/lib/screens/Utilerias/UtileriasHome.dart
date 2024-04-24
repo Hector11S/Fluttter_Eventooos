@@ -141,18 +141,18 @@ class SpecialOfferCard extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                       ),
                       SizedBox(height: 5),
-                        ElevatedButton(
+                      ElevatedButton(
                         onPressed: () {
                           // para añadir al carrito
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue), 
-                          minimumSize: MaterialStateProperty.all<Size>(Size(140, 35)), 
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color.fromARGB(255, 241, 161, 124)),
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size(140, 35)),
                         ),
                         child: Text("Añadir al carrito"),
                       ),
-
-
                     ],
                   ),
                 ),

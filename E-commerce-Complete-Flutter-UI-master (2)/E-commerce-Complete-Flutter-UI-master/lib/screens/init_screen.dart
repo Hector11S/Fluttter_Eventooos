@@ -9,7 +9,7 @@ import 'package:shop_app/screens/Graficos/Graficos.dart';
 //import 'package:shop_app/screens/sign_in/components/sign_form.dart';
 //import 'package:shop_app/screens/Utilerias/Utilerias.dart';
 
-const Color inActiveIconColor = Color(0xFFB6B6B6);
+const Color inActiveIconColor = Color.fromARGB(255, 182, 182, 182);
 
 class InitScreen extends StatefulWidget {
   const InitScreen({super.key});
