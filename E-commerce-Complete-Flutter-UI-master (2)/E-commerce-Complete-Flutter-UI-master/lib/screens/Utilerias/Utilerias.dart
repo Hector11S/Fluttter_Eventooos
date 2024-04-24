@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
-
 import 'package:http/http.dart' as http;
 
 class Utilerias extends StatefulWidget {
@@ -18,14 +16,42 @@ class _UtileriasState extends State<Utilerias> {
   String categori =
       "http://www.gestioneventooooss.somee.com/Api/Utileria/API/Utileria/ListUtilerias";
 
-  Future<List<dynamic>?> _getListado() async {
+  late List<dynamic> _productos = [];
+  late List<dynamic> _productosFiltrados = []; 
+  late TextEditingController _searchController;
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _getListado();
+    _searchController = TextEditingController();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _getListado() async {
     final result = await http.get(Uri.parse(categori));
     if (result.statusCode == 200) {
-      return jsonDecode(result.body)['data'];
+      setState(() {
+        _productos = jsonDecode(result.body)['data'];
+        _productosFiltrados = List.from(_productos); 
+      });
     } else {
       print("Error en el Endpoint");
-      return null;
     }
+  }
+
+  void _updateFilteredProducts(List<dynamic> filteredProducts) {
+    setState(() {
+      _productosFiltrados = filteredProducts;
+    });
   }
 
   @override
@@ -33,37 +59,41 @@ class _UtileriasState extends State<Utilerias> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Productos Disponibles"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: _SearchDelegate(
+                  productos: _productos,
+                  updateFilteredProducts: _updateFilteredProducts,
+                ),
+              );
+            },
+            icon: Icon(Icons.search),
+          ),
+        ],
       ),
-      body: FutureBuilder<List<dynamic>?>(
-        future: _getListado(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
+      body: _productosFiltrados.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              controller: _scrollController,
+              itemCount: _productosFiltrados.length,
               itemBuilder: (context, index) {
-                var categoria = snapshot.data![index];
-                return _buildCategoriaItem(
-                  categoria['util_Descripcion'] ?? "",
-                  categoria['util_Imagen'] ?? "",
-                  categoria['util_Precio'] != null
-                      ? double.parse(categoria['util_Precio'].toString())
+                var producto = _productosFiltrados[index];
+                return _buildProductoItem(
+                  producto['util_Descripcion'] ?? "",
+                  producto['util_Imagen'] ?? "",
+                  producto['util_Precio'] != null
+                      ? double.parse(producto['util_Precio'].toString())
                       : 0.0,
                 );
               },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+            ),
     );
   }
 
-  Widget _buildCategoriaItem(
+  Widget _buildProductoItem(
       String descripcion, String imagenUrl, double precio) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,7 +116,7 @@ class _UtileriasState extends State<Utilerias> {
           ),
         ),
         Text(
-          '\$${precio.toStringAsFixed(2)}',
+          '\L${precio.toStringAsFixed(2)}',
           style: TextStyle(
             fontSize: 14,
             color: Color.fromARGB(255, 0, 0, 0),
@@ -103,9 +133,70 @@ class _UtileriasState extends State<Utilerias> {
           ),
           child: Text('Añadir al carrito'),
         ),
-        SizedBox(height: 10), // Añadimos un espacio entre cada elemento de la lista
-        Divider(), // Añadimos un divisor entre cada elemento de la lista
+        SizedBox(height: 10), 
+        Divider(), 
       ],
+    );
+  }
+}
+
+class _SearchDelegate extends SearchDelegate<String> {
+  final List<dynamic> productos;
+  final Function(List<dynamic>) updateFilteredProducts;
+
+  _SearchDelegate({
+    required this.productos,
+    required this.updateFilteredProducts,
+  });
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? []
+        : productos.where((producto) { 
+            final descripcion = producto['util_Descripcion'].toString().toLowerCase();
+            return descripcion.contains(query.toLowerCase());
+          }).toList();
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        var producto = suggestionList[index];
+        return ListTile(
+          title: Text(producto['util_Descripcion']),
+          onTap: () {
+            close(context, producto['util_Descripcion']);
+            updateFilteredProducts(suggestionList);
+          },
+        );
+      },
     );
   }
 }

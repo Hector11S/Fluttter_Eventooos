@@ -60,23 +60,29 @@ class _TodasLasCategoriasState extends State<TodasLasCategorias> {
     );
   }
 
-  Widget _buildCategoriaRectangulo({
-    required String image,
-    required String category,
-    required int numOfBrands,
-    required VoidCallback press,
-  }) {
-    return GestureDetector(
-      onTap: press,
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(image),
-            fit: BoxFit.cover,
-          ),
+Widget _buildCategoriaRectangulo({
+  required String image,
+  required String category,
+  required int numOfBrands,
+  required VoidCallback press,
+}) {
+  return GestureDetector(
+    onTap: press,
+    child: Container(
+      height: 100,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(image),
+          fit: BoxFit.cover,
         ),
-        child: Center(
+      ),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color.fromARGB(255, 162, 134, 5), width: 2.0),
+            color: Color.fromARGB(255, 162, 134, 5), 
+          ),
           child: Text(
             category,
             style: TextStyle(
@@ -87,6 +93,8 @@ class _TodasLasCategoriasState extends State<TodasLasCategorias> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

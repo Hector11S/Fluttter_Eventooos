@@ -15,15 +15,39 @@ class CategoriaCubiertos extends StatefulWidget {
 class _CategoriaCubiertosState extends State<CategoriaCubiertos> {
   String categori =
       "http://gestioneventooooss.somee.com/Api/Utileria/API/Utileria/ListCategoriaCubiertos";
+  late List<dynamic> _categorias = [];
+  late List<dynamic> _categoriasFiltradas = [];
+  late TextEditingController _searchController;
 
-  Future<List<dynamic>?> _getListado() async {
+  @override
+  void initState() {
+    super.initState();
+    _getListado();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _getListado() async {
     final result = await http.get(Uri.parse(categori));
     if (result.statusCode == 200) {
-      return jsonDecode(result.body)['data'];
+      setState(() {
+        _categorias = jsonDecode(result.body)['data'];
+        _categoriasFiltradas = List.from(_categorias);
+      });
     } else {
       print("Error en el Endpoint");
-      return null;
     }
+  }
+
+  void _updateFilteredCategories(List<dynamic> filteredCategories) {
+    setState(() {
+      _categoriasFiltradas = filteredCategories;
+    });
   }
 
   @override
@@ -31,20 +55,27 @@ class _CategoriaCubiertosState extends State<CategoriaCubiertos> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Categoría de Vajillas, Cubiertos"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: _SearchDelegate(
+                  categorias: _categorias,
+                  updateFilteredCategories: _updateFilteredCategories,
+                ),
+              );
+            },
+            icon: Icon(Icons.search),
+          ),
+        ],
       ),
-      body: FutureBuilder<List<dynamic>?>(
-        future: _getListado(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10.0,
-                crossAxisSpacing: 10.0,
-              ),
-              itemCount: snapshot.data!.length,
+      body: _categoriasFiltradas.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _categoriasFiltradas.length,
               itemBuilder: (context, index) {
-                var categoria = snapshot.data![index];
+                var categoria = _categoriasFiltradas[index];
                 return _buildCategoriaItem(
                   categoria['util_Descripcion'] ?? "",
                   categoria['util_Imagen'] ?? "",
@@ -53,58 +84,115 @@ class _CategoriaCubiertosState extends State<CategoriaCubiertos> {
                       : 0.0,
                 );
               },
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+            ),
     );
   }
 
   Widget _buildCategoriaItem(
       String descripcion, String imagenUrl, double precio) {
-    return Card(
-      elevation: 3.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.network(
-            imagenUrl,
-            height: 80,
-            width: double.infinity,
-            fit: BoxFit.contain,
-          ),
-          SizedBox(height: 1),
-          Text(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Image.network(
+          imagenUrl,
+          fit: BoxFit.cover,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
             descripcion,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 5),
-          Text(
-            '\L$precio',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color.fromARGB(255, 195, 0, 255),
-            ),
+        ),
+        Text(
+          '\L$precio',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
-          SizedBox(height: 5),
-          ElevatedButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(Size(150, 40)),
-            ),
-            child: Text('Añadir al carrito'),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 5),
+        ElevatedButton(
+          onPressed: () {},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            minimumSize: MaterialStateProperty.all(Size(150, 40)),
           ),
-        ],
-      ),
+          child: Text('Añadir al carrito'),
+        ),
+        SizedBox(height: 10), 
+        Divider(), 
+      ],
+    );
+  }
+}
+
+class _SearchDelegate extends SearchDelegate<String> {
+  final List<dynamic> categorias;
+  final Function(List<dynamic>) updateFilteredCategories;
+
+  _SearchDelegate({
+    required this.categorias,
+    required this.updateFilteredCategories,
+  });
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? []
+        : categorias.where((categoria) {
+            final descripcion =
+                categoria['util_Descripcion'].toString().toLowerCase();
+            return descripcion.contains(query.toLowerCase());
+          }).toList();
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        var categoria = suggestionList[index];
+        return ListTile(
+          title: Text(categoria['util_Descripcion']),
+          onTap: () {
+            close(context, categoria['util_Descripcion']);
+            updateFilteredCategories(suggestionList);
+          },
+        );
+      },
     );
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shop_app/screens/Utilerias/Utilerias.dart';
-import 'package:shop_app/screens/home/components/section_title.dart';
 
 class Paquetes extends StatefulWidget {
   static const String routeName = '/PaquetesMostrar';
@@ -30,24 +28,24 @@ class _PaquetesState extends State<Paquetes> {
       final jsonData = json.decode(response.body);
       final List<dynamic> paquetesData = jsonData['data'];
 
-     paquetesData.forEach((paquete) {
-  final descripcion = paquete['paqe_Descripcion'];
-  final utileria = paquete['util_Descripcion'];
-  final precio = paquete['paqe_Precio'];
+      paquetesData.forEach((paquete) {
+        final descripcion = paquete['paqe_Descripcion'];
+        final utileria = paquete['util_Descripcion'];
+        final precio = paquete['paqe_Precio'];
 
-  // Verificar que el precio no sea null antes de agregarlo al mapa
-  if (precio != null) {
-    if (!paquetesUtilerias.containsKey(descripcion)) {
-      paquetesUtilerias[descripcion] = [utileria];
-    } else {
-      paquetesUtilerias[descripcion]!.add(utileria);
-    }
+        // que el precio no sea null antes de agregarlo al mapa
+        if (precio != null) {
+          if (!paquetesUtilerias.containsKey(descripcion)) {
+            paquetesUtilerias[descripcion] = [utileria];
+          } else {
+            paquetesUtilerias[descripcion]!.add(utileria);
+          }
 
-    if (!preciosPorPaquete.containsKey(descripcion)) {
-      preciosPorPaquete[descripcion] = precio;
-    }
-  }
-});
+          if (!preciosPorPaquete.containsKey(descripcion)) {
+            preciosPorPaquete[descripcion] = precio;
+          }
+        }
+      });
 
       setState(() {});
     } else {
@@ -60,14 +58,18 @@ class _PaquetesState extends State<Paquetes> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionTitle(
-            title: "Paquetes",
-            press: () {
-              Navigator.pushNamed(context, Utilerias.routeName);
-            },
+        padding: const EdgeInsets.only(top: 40),
+        child: Padding(
+          padding: const EdgeInsets.only(right: 280),
+          child: Text(
+            "Paquetes",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
+      ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -80,8 +82,6 @@ class _PaquetesState extends State<Paquetes> {
                 category: descripcion,
                 utilerias: utilerias,
                 precio: precio,
-                press: () {},
-                isFirst: paquetesUtilerias.keys.first == descripcion,
               );
             }).toList(),
           ),
@@ -97,15 +97,11 @@ class SpecialOfferCard extends StatefulWidget {
     required this.category,
     required this.utilerias,
     required this.precio,
-    required this.press,
-    this.isFirst = false,
   }) : super(key: key);
 
   final String category;
   final List<dynamic> utilerias;
   final double precio;
-  final GestureTapCallback press;
-  final bool isFirst;
 
   @override
   _SpecialOfferCardState createState() => _SpecialOfferCardState();
@@ -133,14 +129,14 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                 padding: const EdgeInsets.all(1.0),
                 child: Row(
                   children: [
-                    Icon(Icons.shopping_bag, color: Colors.orange),
+                    Icon(Icons.shopping_bag, color: const Color.fromARGB(255, 138, 170, 178)),
                     SizedBox(width: 5),
                     Text(
                       widget.category,
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange,
+                        color: Color.fromARGB(255, 138, 170, 178),
                       ),
                     ),
                     SizedBox(width: 10),
@@ -198,7 +194,7 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: Color.fromARGB(255, 138, 170, 178),
                     ),
                     child: Text(
                       showUtilerias ? "Ocultar detalles" : "Detalles",
