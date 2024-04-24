@@ -74,7 +74,7 @@ class clienteViewmodel{
           Clie_CorreoElectronico: json['clie_CorreoElectronico'],
           Clie_Sexo: json['clie_Sexo'],
           Esta_Id: json['esta_Id'],
-          Muni_Id: json['muni_Id'],
+          Muni_Id: json['muni_Id'] = '0501',
           Clie_Estado: json['clie_Estado'] = true,
           Carg_Id: json['carg_Id'],
           Clie_Fecha_Creacion: json['clie_Fecha_Creacion'] != null
@@ -102,7 +102,7 @@ class clienteViewmodel{
     'clie_CorreoElectronico': Clie_CorreoElectronico,
     'clie_Sexo': Clie_Sexo,
     'esta_Id': Esta_Id,
-    'muni_Id': Muni_Id,
+    'muni_Id': Muni_Id as String,
     'clie_Estado': Clie_Estado,
     'carg_Id':Carg_Id,
     'clie_Fecha_Creacion': Clie_Fecha_Creacion,
