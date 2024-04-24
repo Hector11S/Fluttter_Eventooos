@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
+
 import 'package:http/http.dart' as http;
 
 class Utilerias extends StatefulWidget {
@@ -36,12 +38,7 @@ class _UtileriasState extends State<Utilerias> {
         future: _getListado(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10.0,
-                crossAxisSpacing: 10.0,
-              ),
+            return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var categoria = snapshot.data![index];
@@ -68,52 +65,47 @@ class _UtileriasState extends State<Utilerias> {
 
   Widget _buildCategoriaItem(
       String descripcion, String imagenUrl, double precio) {
-    return Card(
-      elevation: 3.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 80,
-            child: Image.network(
-              imagenUrl,
-              fit: BoxFit.contain,
-            ),
-          ),
-          SizedBox(height: 8),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                descripcion,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            '\L$precio',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Image.network(
+          imagenUrl,
+          fit: BoxFit.cover,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            descripcion,
             style: TextStyle(
-              fontSize: 14,
-              color: Color.fromARGB(255, 0, 0, 0),
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 5),
-          ElevatedButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(Size(70, 40)),
-            ),
-            child: Text('Añadir al carrito'),
+        ),
+        Text(
+          '\$${precio.toStringAsFixed(2)}',
+          style: TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
-        ],
-      ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 5),
+        ElevatedButton(
+          onPressed: () {},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            minimumSize: MaterialStateProperty.all(Size(120, 40)),
+          ),
+          child: Text('Añadir al carrito'),
+        ),
+        SizedBox(height: 10), // Añadimos un espacio entre cada elemento de la lista
+        Divider(), // Añadimos un divisor entre cada elemento de la lista
+      ],
     );
   }
 }

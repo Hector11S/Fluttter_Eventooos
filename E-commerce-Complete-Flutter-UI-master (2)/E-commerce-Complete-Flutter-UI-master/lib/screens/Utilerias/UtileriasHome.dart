@@ -90,8 +90,7 @@ class SpecialOfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(isFirst ? 20 : 10, 5, 10,
-          5), // margen izquierdo solo para la primera imagen
+      padding: EdgeInsets.fromLTRB(isFirst ? 20 : 10, 5, 10, 5),
       child: GestureDetector(
         onTap: press,
         child: SizedBox(
@@ -125,20 +124,30 @@ class SpecialOfferCard extends StatelessWidget {
                     horizontal: 15,
                     vertical: 10,
                   ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
-                      children: [
-                        TextSpan(
-                          text: "$category\n",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        TextSpan(text: "$numOfBrands ")
-                      ],
-                    ),
+                      ),
+                      Text(
+                        numOfBrands,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(height: 5),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Lógica para añadir al carrito
+                        },
+                        child: Text("Añadir al carrito"),
+                      ),
+                    ],
                   ),
                 ),
               ],
