@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shop_app/screens/Utilerias/Utilerias.dart';
-import 'package:shop_app/screens/home/components/section_title.dart';
 
 class Paquetes extends StatefulWidget {
   static const String routeName = '/PaquetesMostrar';
@@ -15,6 +13,7 @@ class Paquetes extends StatefulWidget {
 
 class _PaquetesState extends State<Paquetes> {
   Map<String, List<dynamic>> paquetesUtilerias = {};
+  Map<String, double> preciosPorPaquete = {};
 
   @override
   void initState() {
@@ -23,19 +22,28 @@ class _PaquetesState extends State<Paquetes> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('http://www.gestioneventooooss.somee.com/API/Paquete/ListPaquetesMostrar'));
+    final response = await http.get(Uri.parse(
+        'http://www.gestioneventooooss.somee.com/API/Paquete/ListPaquetesMostrar'));
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      final List<dynamic> paquetesData = jsonData['data']; 
+      final List<dynamic> paquetesData = jsonData['data'];
 
       paquetesData.forEach((paquete) {
         final descripcion = paquete['paqe_Descripcion'];
         final utileria = paquete['util_Descripcion'];
+        final precio = paquete['paqe_Precio'];
 
-        if (paquetesUtilerias.containsKey(descripcion)) {
-          paquetesUtilerias[descripcion]!.add(utileria);
-        } else {
-          paquetesUtilerias[descripcion] = [utileria];
+        // que el precio no sea null antes de agregarlo al mapa
+        if (precio != null) {
+          if (!paquetesUtilerias.containsKey(descripcion)) {
+            paquetesUtilerias[descripcion] = [utileria];
+          } else {
+            paquetesUtilerias[descripcion]!.add(utileria);
+          }
+
+          if (!preciosPorPaquete.containsKey(descripcion)) {
+            preciosPorPaquete[descripcion] = precio;
+          }
         }
       });
 
@@ -50,26 +58,30 @@ class _PaquetesState extends State<Paquetes> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionTitle(
-            title: "Paquetes",
-            press: () {
-              Navigator.pushNamed(context, Utilerias.routeName);
-            },
+        padding: const EdgeInsets.only(top: 40),
+        child: Padding(
+          padding: const EdgeInsets.only(right: 280),
+          child: Text(
+            "Paquetes",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
+      ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: paquetesUtilerias.entries.map((entry) {
               final descripcion = entry.key;
               final utilerias = entry.value;
+              final precio = preciosPorPaquete[descripcion] ?? 0.0;
 
               return SpecialOfferCard(
                 category: descripcion,
                 utilerias: utilerias,
-                press: () {},
-                isFirst: paquetesUtilerias.keys.first == descripcion, 
+                precio: precio,
               );
             }).toList(),
           ),
@@ -79,72 +91,119 @@ class _PaquetesState extends State<Paquetes> {
   }
 }
 
-class SpecialOfferCard extends StatelessWidget {
+class SpecialOfferCard extends StatefulWidget {
   const SpecialOfferCard({
     Key? key,
     required this.category,
     required this.utilerias,
-    required this.press,
-    this.isFirst = false, 
+    required this.precio,
   }) : super(key: key);
 
   final String category;
-  final List<dynamic> utilerias; 
-  final GestureTapCallback press;
-  final bool isFirst; 
+  final List<dynamic> utilerias;
+  final double precio;
+
+  @override
+  _SpecialOfferCardState createState() => _SpecialOfferCardState();
+}
+
+class _SpecialOfferCardState extends State<SpecialOfferCard> {
+  bool showUtilerias = false;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(isFirst ? 20 : 10, 5, 10, 5),
-      child: GestureDetector(
-        onTap: press,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.6,
-          height: 200,
-          child: ClipRRect(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        height: showUtilerias ? 250 : 150,
+        child: Card(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black54,
-                        Colors.black38,
-                        Colors.black26,
-                        Colors.transparent,
-                      ],
+          ),
+          elevation: 5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.shopping_bag, color: const Color.fromARGB(255, 138, 170, 178)),
+                    SizedBox(width: 5),
+                    Text(
+                      widget.category,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 138, 170, 178),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      '\L.${widget.precio.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 2),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Visibility(
+                  visible: showUtilerias,
+                  child: Text(
+                    "Este paquete Contiene:",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
-                      children: [
-                        TextSpan(
-                          text: "$category\n",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+              ),
+              SizedBox(height: 5),
+              Visibility(
+                visible: showUtilerias,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var utileria in widget.utilerias)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          utileria.toString(),
+                          style: TextStyle(color: Colors.black),
                         ),
-                        for (var utileria in utilerias)
-                          TextSpan(text: "$utileria\n"),
-                      ],
+                      ),
+                  ],
+                ),
+              ),
+              Spacer(),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showUtilerias = !showUtilerias;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 138, 170, 178),
+                    ),
+                    child: Text(
+                      showUtilerias ? "Ocultar detalles" : "Detalles",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

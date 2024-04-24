@@ -28,11 +28,13 @@ class _SplashContentState extends State<SplashContent> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 1),
+        
         Image.asset(
           "assets/images/estelogosi.png",
           width: 500,
-          height: 220,
+          height: 280,
+          fit: BoxFit.cover,
         ),
         const SizedBox(height: 8),
         Text(
@@ -40,10 +42,12 @@ class _SplashContentState extends State<SplashContent> {
           textAlign: TextAlign.center,
         ),
         const Spacer(flex: 2),
+        
         Image.asset(
           widget.image!,
-          height: 230,
+          height: 200,
           width: 200,
+          fit: BoxFit.cover,
         ),
       ],
     );

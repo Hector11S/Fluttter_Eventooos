@@ -25,6 +25,7 @@ import 'screens/Utilerias/Utilerias.dart';
 import 'screens/Utilerias/UtileriasHome.dart';
 import 'screens/Paquetes/Paquetes.dart';
 import 'screen/usuario_insertar.dart';
+import 'package:shop_app/screens/Carrito/CarritoScreen.dart';
 
 final Map<String, WidgetBuilder> routes = {
   InitScreen.routeName: (context) => const InitScreen(),
@@ -51,4 +52,5 @@ final Map<String, WidgetBuilder> routes = {
   UtileriasHome.routeName: (context) => const UtileriasHome(),
   Paquetes.routeName: (context) => const Paquetes(),
   CrearUsuarioView.routeName: (context) => const CrearUsuarioView(),
+   CarritoScreen.routeName: (context) => const CarritoScreen(carrito: []),
 };

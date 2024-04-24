@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             duration: kAnimationDuration,
                             margin: const EdgeInsets.only(right: 5),
                             height: 6,
-                            width: currentPage == index ? 20 : 6,
+                            width: currentPage == index ? 10 : 10,
                             decoration: BoxDecoration(
                               color: currentPage == index
                                   ? kPrimaryColor
@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           ),
                         ),
                       ),
-                      const Spacer(flex: 3),
+                      const Spacer(flex: 2),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, InitScreen.routeName);

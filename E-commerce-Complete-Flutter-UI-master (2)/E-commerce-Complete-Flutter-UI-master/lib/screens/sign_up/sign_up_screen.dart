@@ -26,13 +26,13 @@ class SignUpScreen extends StatelessWidget {
                   const Text("Registrate", style: headingStyle),
                   const SizedBox(height: 8),
                   Image.asset(
-                    "assets/images/logo eventos hn.png",
+                    "assets/images/estelogosi.png",
                     width: 400,
                     height: 150,
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    "Completa tu informacion \cCon alguna red Social",
+                    "Completa tu informacion \nCon alguna red Social",
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),

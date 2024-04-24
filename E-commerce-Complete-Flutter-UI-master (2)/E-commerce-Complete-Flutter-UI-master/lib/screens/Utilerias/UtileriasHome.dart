@@ -60,7 +60,7 @@ class _UtileriasHomeState extends State<UtileriasHome> {
               return SpecialOfferCard(
                 image: utileria['util_Imagen'],
                 category: utileria['util_Descripcion'],
-                numOfBrands: '\$${utileria['util_Precio']}',
+                numOfBrands: '\L${utileria['util_Precio']}',
                 press: () {},
                 isFirst: index == 0,
               );
@@ -90,8 +90,7 @@ class SpecialOfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(isFirst ? 20 : 10, 5, 10,
-          5), // margen izquierdo solo para la primera imagen
+      padding: EdgeInsets.fromLTRB(isFirst ? 20 : 10, 5, 10, 5),
       child: GestureDetector(
         onTap: press,
         child: SizedBox(
@@ -125,20 +124,36 @@ class SpecialOfferCard extends StatelessWidget {
                     horizontal: 15,
                     vertical: 10,
                   ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
-                      children: [
-                        TextSpan(
-                          text: "$category\n",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        TextSpan(text: "$numOfBrands ")
-                      ],
-                    ),
+                      ),
+                      Text(
+                        numOfBrands,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(height: 5),
+                        ElevatedButton(
+                        onPressed: () {
+                          // para añadir al carrito
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue), 
+                          minimumSize: MaterialStateProperty.all<Size>(Size(140, 35)), 
+                        ),
+                        child: Text("Añadir al carrito"),
+                      ),
+
+
+                    ],
                   ),
                 ),
               ],
