@@ -17,20 +17,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   int currentPage = 0;
   List<Map<String, String>> splashData = [
-    {
-      "text": "Bienvenidos a Eventos HN, Vamos a Comprar!!!",
-      "image": "assets/images/silla.jpg"
-    },
-    {
-      "text":
-          "Ayudamos a las personas a conectarse con la tienda \nen todo Honduras!!",
-      "image": "assets/images/cumple.jpeg"
-    },
-    {
-      "text":
-          "Mostramos la manera fácil de comprar.. \nQuédate en casa con nosotros",
-      "image": "assets/images/boda.jpg"
-    },
+    {"text": "Graduaciones", "image": "assets/images/silla.jpg"},
+    {"text": "Cumpleaños!!!", "image": "assets/images/cumple.jpeg"},
+    {"text": "Bodas", "image": "assets/images/boda.jpg"},
+    {"text": "15 Años", "image": "assets/images/15anos.jpg"},
+    {"text": "Funerales", "image": "assets/images/Funerales.jpg"},
   ];
   @override
   Widget build(BuildContext context) {
@@ -70,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             duration: kAnimationDuration,
                             margin: const EdgeInsets.only(right: 5),
                             height: 6,
-                            width: currentPage == index ? 10 : 10,
+                            width: currentPage == index ? 12 : 12,
                             decoration: BoxDecoration(
                               color: currentPage == index
                                   ? kPrimaryColor

@@ -38,17 +38,12 @@ class _UsuarioState extends State<Usuario> {
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: DataTable(
-                headingRowColor: MaterialStateColor.resolveWith((states) =>
-                    Colors.blueGrey[
-                        50]!), // Color de fondo de la fila de encabezado
-                headingTextStyle: TextStyle(
-                    fontWeight:
-                        FontWeight.bold), // Estilo de texto para el encabezado
-                dataRowColor: MaterialStateColor.resolveWith((states) => Colors
-                    .blueGrey[100]!), // Color de fondo de las filas de datos
-                dataTextStyle: TextStyle(
-                    fontStyle:
-                        FontStyle.italic), // Estilo de texto para los datos
+                headingRowColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.blueGrey[50]!),
+                headingTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                dataRowColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.blueGrey[100]!),
+                dataTextStyle: TextStyle(fontStyle: FontStyle.italic),
                 columns: [
                   DataColumn(label: Text('ID')),
                   DataColumn(label: Text('Nombre')),

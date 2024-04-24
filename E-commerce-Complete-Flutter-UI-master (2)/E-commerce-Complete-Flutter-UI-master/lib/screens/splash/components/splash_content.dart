@@ -20,16 +20,7 @@ class _SplashContentState extends State<SplashContent> {
     return Column(
       children: <Widget>[
         const Spacer(),
-        const Text(
-          "",
-          style: TextStyle(
-            fontSize: 32,
-            color: kPrimaryColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         const SizedBox(height: 1),
-        
         Image.asset(
           "assets/images/estelogosi.png",
           width: 500,
@@ -40,13 +31,17 @@ class _SplashContentState extends State<SplashContent> {
         Text(
           widget.text!,
           textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
         ),
         const Spacer(flex: 2),
-        
         Image.asset(
           widget.image!,
-          height: 200,
-          width: 200,
+          height: 250,
+          width: 250,
           fit: BoxFit.cover,
         ),
       ],
