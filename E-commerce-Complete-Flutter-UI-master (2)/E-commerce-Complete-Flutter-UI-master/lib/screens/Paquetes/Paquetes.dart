@@ -115,8 +115,8 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.6,
-        height: showUtilerias ? 250 : 200,
+        width: MediaQuery.of(context).size.width * 0.7,
+        height: showUtilerias ? 400 : 200,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -129,14 +129,15 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                 padding: const EdgeInsets.all(1.0),
                 child: Row(
                   children: [
-                    Icon(Icons.shopping_bag, color: const Color.fromARGB(255, 138, 170, 178)),
+                    Icon(Icons.shopping_bag,
+                        color: const Color.fromARGB(255, 194, 163, 27)),
                     SizedBox(width: 5),
                     Text(
                       widget.category,
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 138, 170, 178),
+                        color: Color.fromARGB(255, 194, 163, 27),
                       ),
                     ),
                     SizedBox(width: 10),
@@ -192,7 +193,7 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 138, 170, 178),
+                    backgroundColor: Color.fromARGB(255, 194, 163, 27),
                   ),
                   child: Text(
                     showUtilerias ? "Ocultar detalles" : "Detalles",
@@ -201,18 +202,20 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                 ),
               ),
               Visibility(
-                visible: !showUtilerias, // Ocultar el botón "Añadir al carrito" cuando se muestran los detalles
+                visible: !showUtilerias, // Ocultar
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10, right: 30),
+                  padding: const EdgeInsets.only(bottom: 10, right: 55),
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Lógica para añadir al carrito
+                        // añadir al carrito
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromARGB(255, 241, 161, 124)),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
                         minimumSize: MaterialStateProperty.all(Size(50, 40)),
                       ),
                       child: Text('Añadir al carrito'),
