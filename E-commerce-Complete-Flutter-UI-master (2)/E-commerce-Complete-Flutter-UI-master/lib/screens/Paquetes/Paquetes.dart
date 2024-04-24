@@ -58,18 +58,18 @@ class _PaquetesState extends State<Paquetes> {
     return Column(
       children: [
         Padding(
-        padding: const EdgeInsets.only(top: 40),
-        child: Padding(
-          padding: const EdgeInsets.only(right: 280),
-          child: Text(
-            "Paquetes",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.only(top: 40),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 280),
+            child: Text(
+              "Paquetes",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-      ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -116,7 +116,7 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
       padding: const EdgeInsets.all(10.0),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.6,
-        height: showUtilerias ? 250 : 150,
+        height: showUtilerias ? 250 : 200,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -183,22 +183,39 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                 ),
               ),
               Spacer(),
-              Align(
-                alignment: Alignment.bottomRight,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      showUtilerias = !showUtilerias;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 138, 170, 178),
+                  ),
+                  child: Text(
+                    showUtilerias ? "Ocultar detalles" : "Detalles",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: !showUtilerias, // Ocultar el botón "Añadir al carrito" cuando se muestran los detalles
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        showUtilerias = !showUtilerias;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 138, 170, 178),
-                    ),
-                    child: Text(
-                      showUtilerias ? "Ocultar detalles" : "Detalles",
-                      style: TextStyle(color: Colors.white),
+                  padding: const EdgeInsets.only(bottom: 10, right: 30),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Lógica para añadir al carrito
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        minimumSize: MaterialStateProperty.all(Size(50, 40)),
+                      ),
+                      child: Text('Añadir al carrito'),
                     ),
                   ),
                 ),
