@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/constants.dart';
+import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
 import 'package:shop_app/screens/login_success/login_success_screen.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../helper/keyboard.dart';
@@ -19,7 +21,7 @@ class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController usuarioController = TextEditingController();
   TextEditingController contraController = TextEditingController();
-
+  bool? remember = false;
   void _login() async {
     try {
       final response = await http.post(
@@ -93,6 +95,29 @@ class _SignFormState extends State<SignForm> {
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
+          ),const SizedBox(height: 20),
+          Row(
+            children: [
+              Checkbox(
+                value: remember,
+                activeColor: kPrimaryColor,
+                onChanged: (value) {
+                  setState(() {
+                    remember = value;
+                  });
+                },
+              ),
+              const Text("Remember me"),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(
+                    context, ForgotPasswordScreen.routeName),
+                child: const Text(
+                  "Restablecer contraseña",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              )
+            ],
           ),
           const SizedBox(height: 20),
           ElevatedButton(

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
 import '../../../components/no_account_text.dart';
 import '../../../constants.dart';
+//import '../../otp/otp_screen.dart';
 
 class ForgotPassForm extends StatefulWidget {
-  const ForgotPassForm({super.key});
+  const ForgotPassForm({Key? key}) : super(key: key);
 
   @override
   _ForgotPassFormState createState() => _ForgotPassFormState();
@@ -15,7 +18,16 @@ class ForgotPassForm extends StatefulWidget {
 class _ForgotPassFormState extends State<ForgotPassForm> {
   final _formKey = GlobalKey<FormState>();
   List<String> errors = [];
-  String? email;
+  String? usuario;
+
+  Future<void> _validateUsuario(String usuario) async {
+    // Aquí llamas a la API para validar el usuario y restablecer la contraseña
+    String url = 'http://www.gestioneventooooss.somee.com/Api/Usuario/ValidarReestablecer/$usuario';
+    var response = await http.get(Uri.parse(url));
+    // Puedes manejar la respuesta de la API aquí
+    print('Validar Usuario: ${response.statusCode}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -23,41 +35,25 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
       child: Column(
         children: [
           TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            onSaved: (newValue) => email = newValue,
+            keyboardType: TextInputType.text,
+            onSaved: (newValue) => usuario = newValue,
             onChanged: (value) {
               if (value.isNotEmpty && errors.contains(kEmailNullError)) {
                 setState(() {
                   errors.remove(kEmailNullError);
                 });
-              } else if (emailValidatorRegExp.hasMatch(value) &&
-                  errors.contains(kInvalidEmailError)) {
+              } else if (value.isNotEmpty && errors.contains(kInvalidEmailError)) {
                 setState(() {
                   errors.remove(kInvalidEmailError);
                 });
               }
               return;
             },
-            validator: (value) {
-              if (value!.isEmpty && !errors.contains(kEmailNullError)) {
-                setState(() {
-                  errors.add(kEmailNullError);
-                });
-              } else if (!emailValidatorRegExp.hasMatch(value) &&
-                  !errors.contains(kInvalidEmailError)) {
-                setState(() {
-                  errors.add(kInvalidEmailError);
-                });
-              }
-              return null;
-            },
             decoration: const InputDecoration(
-              labelText: "Email",
-              hintText: "Enter your email",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
+              labelText: "Usuario",
+              hintText: "Ingresa tu usuario",
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
             ),
           ),
           const SizedBox(height: 8),
@@ -66,11 +62,15 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // Do what you want to do
+                _formKey.currentState!.save();
+                // Llama a la función para validar el usuario
+                _validateUsuario(usuario!);
+                
               }
             },
-            child: const Text("Continue"),
+            child: const Text("Continuar"),
           ),
+          
           const SizedBox(height: 16),
           const NoAccountText(),
         ],

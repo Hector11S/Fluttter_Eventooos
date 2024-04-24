@@ -6,7 +6,7 @@ import 'package:shop_app/screens/Utilerias/Utilerias.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/profile/profile_screen.dart';
 import 'package:shop_app/screens/Graficos/Graficos.dart';
-import 'package:shop_app/screens/sign_in/components/sign_form.dart';
+//import 'package:shop_app/screens/sign_in/components/sign_form.dart';
 //import 'package:shop_app/screens/Utilerias/Utilerias.dart';
 
 const Color inActiveIconColor = Color(0xFFB6B6B6);

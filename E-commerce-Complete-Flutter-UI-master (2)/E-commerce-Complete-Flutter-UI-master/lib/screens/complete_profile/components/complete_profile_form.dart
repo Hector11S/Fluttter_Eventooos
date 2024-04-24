@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/Clienteviewmodel.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
@@ -14,27 +15,18 @@ class CompleteProfileForm extends StatefulWidget {
 
 class _CompleteProfileFormState extends State<CompleteProfileForm> {
   final _formKey = GlobalKey<FormState>();
-  final List<String?> errors = [];
-  String? firstName;
-  String? lastName;
-  String? phoneNumber;
-  String? address;
+  clienteViewmodel _ClienteModel = clienteViewmodel(); 
+  List<Rol> _civil = [];
+  List<Empleados1> _Muni = [];
+  int? _selectedRoleId;
+  int? _selectedEmplId;
+  int? _selectedClienId;
+  bool _isAdmin = false; 
+  String urlCrearUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/Create";
+  String urlRoles = "http://www.gestioneventooooss.somee.com/Api/Rol/List";
+  String urlEmpl = "http://www.gestioneventooooss.somee.com/Api/Empleado/List";
+  String urlCliente = "http://www.gestioneventooooss.somee.com/Api/Cliente/List";
 
-  void addError({String? error}) {
-    if (!errors.contains(error)) {
-      setState(() {
-        errors.add(error);
-      });
-    }
-  }
-
-  void removeError({String? error}) {
-    if (errors.contains(error)) {
-      setState(() {
-        errors.remove(error);
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,13 +127,48 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                Navigator.pushNamed(context, OtpScreen.routeName);
+                Navigator.pushNamed(context, OtpForm.routeName);
               }
             },
             child: const Text("Continue"),
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class EstadoCivil {
+   final int id;
+  final String descripcion;
+
+  EstadoCivil({
+    required this.id,
+    required this.descripcion,
+  });
+
+   factory EstadoCivil.fromJson(Map<String, dynamic> json) {
+    return EstadoCivil(
+      id: json['rol_Id'],
+      descripcion: json['role_Descripcion'],
+    );
+  }
+}
+
+class Municipio {
+  final int id;
+  final String descripcion;
+
+  Municipio({
+    required this.id,
+    required this.descripcion,
+  });
+
+  factory Municipio.fromJson(Map<String, dynamic> json) {
+    return Municipio(
+      id: json['empl_Id'],
+      descripcion: json['empl_Nombre'],
     );
   }
 }

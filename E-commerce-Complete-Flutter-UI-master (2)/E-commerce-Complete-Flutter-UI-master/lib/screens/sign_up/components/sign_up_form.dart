@@ -6,7 +6,7 @@ import '../../../constants.dart';
 import '../../complete_profile/complete_profile_screen.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  const SignUpForm({Key? key}) : super(key: key);
 
   @override
   _SignUpFormState createState() => _SignUpFormState();
@@ -14,7 +14,7 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
+  String? usuario;
   String? password;
   String? conform_password;
   bool remember = false;
@@ -44,7 +44,7 @@ class _SignUpFormState extends State<SignUpForm> {
         children: [
           TextFormField(
             keyboardType: TextInputType.emailAddress,
-            onSaved: (newValue) => email = newValue,
+            onSaved: (newValue) => usuario = newValue,
             onChanged: (value) {
               if (value.isNotEmpty) {
                 removeError(error: kEmailNullError);
@@ -64,12 +64,10 @@ class _SignUpFormState extends State<SignUpForm> {
               return null;
             },
             decoration: const InputDecoration(
-              labelText: "Correo",
-              hintText: "Ingresa tu correo",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
+              labelText: "Usuario",
+              hintText: "Ingresa tu usuario",
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -97,8 +95,6 @@ class _SignUpFormState extends State<SignUpForm> {
             decoration: const InputDecoration(
               labelText: "Contraseña",
               hintText: "Ingresa tu contraseña",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
@@ -127,9 +123,7 @@ class _SignUpFormState extends State<SignUpForm> {
             },
             decoration: const InputDecoration(
               labelText: "Confirma tu Contraseña",
-              hintText: "Ingresa Tu contraseña nuevamente",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
+              hintText: "Ingresa tu contraseña nuevamente",
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
