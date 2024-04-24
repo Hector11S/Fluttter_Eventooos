@@ -23,7 +23,7 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
   List<Rol> _roles = [];
   List<Empleados1> _Empl = [];
   List<Clienete2> _Clien = [];
-  String urlUsuario = "";
+  String urlUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/Fill";
   String urlActualizarUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/Update";
   String urlRoles = "http://www.gestioneventooooss.somee.com/Api/Rol/List";
   String urlEmpl = "http://www.gestioneventooooss.somee.com/Api/Empleado/List";
@@ -38,27 +38,28 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
     _fetchEmple();
   }
 
-  Future<void> _fetchUsuario() async {
-    try {
-      final response = await http.get(Uri.parse('http://www.gestioneventooooss.somee.com/API/Usuario/Fill?id=${widget.userId}'));
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final userData = responseData['data'][0];
-        setState(() {
-          _usuarioController.text = userData['usua_Usuario'] ?? '';
-          _contrasenaController.text = userData['Usua_Contra'] ?? '';
-          _selectedRoleId = userData['role_Id'];
-          _selectedEmplId = userData['empl_Id'];
-          _selectedClienId = userData['clie_Id'];
-          _esAdministrador = userData['usua_EsAdmin'] ?? false;
-        });
-      } else {
-        throw Exception("Error al obtener información del usuario");
-      }
-    } catch (e) {
-      print("Error: $e");
+Future<void> _fetchUsuario() async {
+  try {
+    final response = await http.get(Uri.parse('$urlUsuario?Usua_Id=${widget.userId}'));
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final userData = responseData['data']; // Verifica la estructura de tu respuesta JSON
+      setState(() {
+        _usuarioController.text = userData['usua_Usuario'] ?? '';
+        _contrasenaController.text = userData['usua_Contra'] ?? '';
+        _selectedRoleId = userData['rol_Id'];
+        _selectedEmplId = userData['empl_Id'];
+        _selectedClienId = userData['clie_Id'];
+        _esAdministrador = userData['usua_Admin'] ?? false;
+      });
+    } else {
+      throw Exception("Error al obtener información del usuario");
     }
+  } catch (e) {
+    print("Error: $e");
   }
+}
+
 
   Future<void> _fetchRoles() async {
     try {
@@ -115,12 +116,12 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
         final response = await http.put(
           Uri.parse(urlActualizarUsuario),
           body: jsonEncode({
-            'Usua_Id': widget.userId,
-            'Usua_Usuario': _usuarioController.text,
-            'Rol_Id': _selectedRoleId,
-            'Clie_Id': _selectedClienId,
-            'Empl_Id': _selectedEmplId,
-            'Usua_EsAdmin': _esAdministrador,
+            'usua_Id': widget.userId,
+            'usua_Usuario': _usuarioController.text,
+            'rol_Id': _selectedRoleId,
+            'clie_Id': _selectedClienId,
+            'empl_Id': _selectedEmplId,
+            'usua_Admin': _esAdministrador,
           }),
           headers: {
             'Content-Type': 'application/json',

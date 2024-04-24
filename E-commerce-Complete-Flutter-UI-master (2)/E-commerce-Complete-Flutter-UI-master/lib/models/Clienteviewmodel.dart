@@ -58,7 +58,7 @@ class clienteViewmodel{
     Usua_Contra: json['usua_Contra'],
     Rol_Id: json['rol_Id'],
        Clie_Id: json['clie_Id'],
-          Empl_Id: json['empl_Id'],
+          Empl_Id: json['empl_Id'] ,
       Usua_Usua_Creacion: json['usua_Usua_Creacion'],
       Usua_Fecha_Creacion: json['usua_Fecha_Creacion'] != null
           ? DateTime.parse(json['usua_Fecha_Modifica'])
@@ -74,7 +74,7 @@ class clienteViewmodel{
           Clie_CorreoElectronico: json['clie_CorreoElectronico'],
           Clie_Sexo: json['clie_Sexo'],
           Esta_Id: json['esta_Id'],
-          Muni_Id: json['muni_Id'] = '0501',
+          Muni_Id: json['muni_Id'] = '',
           Clie_Estado: json['clie_Estado'] = true,
           Carg_Id: json['carg_Id'],
           Clie_Fecha_Creacion: json['clie_Fecha_Creacion'] != null
@@ -87,7 +87,7 @@ class clienteViewmodel{
     'usua_id': Usua_Id,
     'usua_usuario': Usua_Usuario,
     'usua_EsAdmin': Usua_Admin,
-    'Usua_Clave': Usua_Contra,
+    'usua_Contra': Usua_Contra,
     'role_Id': Rol_Id,
     'clie_Id': Clie_Id,
     'empl_Id': Empl_Id,

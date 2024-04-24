@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shop_app/screen/usuario_insertar.dart';
 import 'package:shop_app/screen/usuario_modificar.dart';
-
+import 'package:shop_app/screen/usuariodetalle.dart';
 class UsuariosViewModel {
   int usuarId;
   String? usuarUsuario;
@@ -180,8 +180,21 @@ class _MyWidgetState extends State<WidgetUsuario> {
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
+                                  OutlinedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => UsuarioDetallesScreen(userId: user.usuarId)),
+                                  );
+                                },
+                                child: const Text(
+                                  'Detalle',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
                             ],
                           ),
+                          
                         ),
                       ],
                     );

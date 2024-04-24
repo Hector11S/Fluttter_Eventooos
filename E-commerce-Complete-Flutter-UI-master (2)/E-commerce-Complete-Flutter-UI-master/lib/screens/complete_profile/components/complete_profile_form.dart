@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/Clienteviewmodel.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
+import 'package:shop_app/screens/sign_up/components/sign_up_form.dart';
 
 import '../../otp/otp_screen.dart';
 
@@ -19,7 +21,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   List<EstadoCivil> _civil = [];
   List<Municipio> _Muni = [];
   int? _selectedCivilId;
-  int? _selectedMuniId;
+  int? _selectedMuniId ;
   String urlClienteregistro = "http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/Registrar";
   String urlCivil = "http://www.gestioneventooooss.somee.com/Api/Cliente/ListCivil";
   String urlMuni = "http://www.gestioneventooooss.somee.com/Api/Cliente/ListMuni";
@@ -77,8 +79,9 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   "clie_CorreoElectronico": _ClienteModel.Clie_CorreoElectronico,
   "clie_Sexo": _ClienteModel.Clie_Sexo,
   "esta_Id": _selectedCivilId,
- // "muni_Id": _selectedMuniId,
- 
+ "muni_Id": _selectedMuniId,
+ 'usua_Usuario': _ClienteModel.Usua_Usuario,
+ 'usua_Contra': _ClienteModel.Usua_Contra
 
 }),
 
@@ -95,7 +98,9 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           SnackBar(
             content: Text("Cliente creado exitosamente"),
             backgroundColor: Colors.green,
+            
           ),
+          
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -214,31 +219,39 @@ DropdownButtonFormField<String>(
                   return null;
                 },
               ), 
-              
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-            
-              if (_formKey.currentState!.validate()) {
-            
-                 _RegistroCliente();
-              }
-              
-            },
-            
-            child: const Text("Guardar"),
+               const SizedBox(height: 20),
+          TextFormField(
+           onChanged: (value) => _ClienteModel.Usua_Usuario = value,
+                decoration: InputDecoration(labelText: 'Usuario'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa un Usuario';
+                  }
+                  return null;
+                },
           ),
-            const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                Navigator.pushNamed(context, OtpScreen.routeName);
-              }
-            },
-            child: const Text("Continuar"),
+           const SizedBox(height: 20),
+          TextFormField(
+           onChanged: (value) => _ClienteModel.Usua_Contra = value,
+                decoration: InputDecoration(labelText: 'Contraseña'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa una contraseña';
+                  }
+                  return null;
+                },
           ),
+        const SizedBox(height: 10),
+ElevatedButton(
+  onPressed: () {
+    if (_formKey.currentState!.validate()) {
+      _RegistroCliente();
+      Navigator.pushNamed(context, SignInScreen.routeName);
+    }
+  },
+  child: const Text("Guardar"),
+),
+
         ],
       ),
     );

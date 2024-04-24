@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/screens/otp/otp_screen.dart';
 
 
 import '../../../components/custom_surfix_icon.dart';
@@ -65,7 +66,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
                 _formKey.currentState!.save();
                 // Llama a la función para validar el usuario
                 _validateUsuario(usuario!);
-                
+                 Navigator.pushNamed(context, OtpScreen.routeName);
               }
             },
             child: const Text("Continuar"),
