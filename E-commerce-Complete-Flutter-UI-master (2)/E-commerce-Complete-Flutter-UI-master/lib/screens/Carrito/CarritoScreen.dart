@@ -44,7 +44,7 @@ class CarritoScreen extends StatelessWidget {
                 return ListTile(
                   leading: Image.network(item.imagenUrl),
                   title: Text(item.descripcion),
-                  subtitle: Text('\$${item.precio.toStringAsFixed(2)}'),
+                  subtitle: Text('\L${item.precio.toStringAsFixed(2)}'),
                 );
               },
             ),
