@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../constants.dart';
 
@@ -32,9 +33,54 @@ class _OtpFormState extends State<OtpForm> {
     pin4FocusNode!.dispose();
   }
 
+Future<void> validateOtp(BuildContext context, String otp) async {
+  final url = 'http://www.gestioneventooooss.somee.com/Api/Usuario/MostrarCodigo/$otp';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    // Mostrar mensaje de éxito
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Código OTP válido. Redirigiendo...'),
+        duration: Duration(seconds: 2), // Duración del SnackBar
+      ),
+    );
+
+    // Redirigir a otra página después de un breve retraso
+    Future.delayed(Duration(seconds: 2), () {
+      // Aquí puedes navegar a otra pantalla, por ejemplo:
+      // Navigator.pushNamed(context, '/nueva_pagina');
+    });
+  } else {
+    // Mostrar mensaje de error si la solicitud falla
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error al validar el código OTP. Por favor, inténtalo de nuevo.'),
+        duration: Duration(seconds: 2), // Duración del SnackBar
+      ),
+    );
+  }
+}
+
   void nextField(String value, FocusNode? focusNode) {
     if (value.length == 1) {
       focusNode!.requestFocus();
+    } else if (value.length == 0 && focusNode != pin2FocusNode) {
+      // Cuando se elimina un dígito, retrocede al campo anterior
+      focusNode!.previousFocus();
+    } else if (value.length == 0 && focusNode == pin2FocusNode) {
+      // Cuando se elimina el primer dígito del segundo campo, retrocede al primer campo
+      pin2FocusNode!.unfocus();
+    } else if (value.length == 0 && focusNode == pin3FocusNode) {
+      pin3FocusNode!.unfocus();
+    } else if (value.length == 0 && focusNode == pin4FocusNode) {
+      pin4FocusNode!.unfocus();
+    }
+
+    // Si el valor tiene longitud 1 y el campo es el último campo del OTP
+    if (value.length == 1 && focusNode == pin4FocusNode) {
+      // Validar el OTP
+      validateOtp(context,value);
     }
   }
 
@@ -95,10 +141,7 @@ class _OtpFormState extends State<OtpForm> {
                   textAlign: TextAlign.center,
                   decoration: otpInputDecoration,
                   onChanged: (value) {
-                    if (value.length == 1) {
-                      pin4FocusNode!.unfocus();
-                      // Then you need to check is the code is correct or not
-                    }
+                    nextField(value, null); // No hay siguiente campo
                   },
                 ),
               ),

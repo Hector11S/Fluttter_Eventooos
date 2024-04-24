@@ -215,18 +215,29 @@ DropdownButtonFormField<String>(
                 },
               ), 
               
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
             
               if (_formKey.currentState!.validate()) {
-                Navigator.pushNamed(context, OtpForm.routeName);
+            
                  _RegistroCliente();
               }
               
             },
             
-            child: const Text("Continue"),
+            child: const Text("Guardar"),
+          ),
+            const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                // if all are valid then go to success screen
+                Navigator.pushNamed(context, OtpScreen.routeName);
+              }
+            },
+            child: const Text("Continuar"),
           ),
         ],
       ),

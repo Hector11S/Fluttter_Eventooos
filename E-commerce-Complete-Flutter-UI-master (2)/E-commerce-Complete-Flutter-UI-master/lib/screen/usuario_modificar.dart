@@ -23,7 +23,7 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
   List<Rol> _roles = [];
   List<Empleados1> _Empl = [];
   List<Clienete2> _Clien = [];
-  String urlUsuario = "http://www.gestioneventooooss.somee.com/API/Usuario/Fill";
+  String urlUsuario = "";
   String urlActualizarUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/Update";
   String urlRoles = "http://www.gestioneventooooss.somee.com/Api/Rol/List";
   String urlEmpl = "http://www.gestioneventooooss.somee.com/Api/Empleado/List";
@@ -40,7 +40,7 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
 
   Future<void> _fetchUsuario() async {
     try {
-      final response = await http.get(Uri.parse('$urlUsuario?id=${widget.userId}'));
+      final response = await http.get(Uri.parse('http://www.gestioneventooooss.somee.com/API/Usuario/Fill?id=${widget.userId}'));
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         final userData = responseData['data'][0];
