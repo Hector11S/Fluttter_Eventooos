@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -116,7 +115,7 @@ class _UtileriasState extends State<Utilerias> {
           ),
         ),
         Text(
-          '\L${precio.toStringAsFixed(2)}',
+          '\$${precio.toStringAsFixed(2)}',
           style: TextStyle(
             fontSize: 14,
             color: Color.fromARGB(255, 0, 0, 0),
@@ -125,7 +124,9 @@ class _UtileriasState extends State<Utilerias> {
         ),
         SizedBox(height: 5),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            _addToCart(descripcion, imagenUrl, precio);
+          },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -138,6 +139,30 @@ class _UtileriasState extends State<Utilerias> {
       ],
     );
   }
+
+  List<CarritoItem> _carrito = [];
+
+  void _addToCart(String descripcion, String imagenUrl, double precio) {
+    setState(() {
+      _carrito.add(CarritoItem(
+        descripcion: descripcion,
+        imagenUrl: imagenUrl,
+        precio: precio,
+      ));
+    });
+  }
+}
+
+class CarritoItem {
+  final String descripcion;
+  final String imagenUrl;
+  final double precio;
+
+  CarritoItem({
+    required this.descripcion,
+    required this.imagenUrl,
+    required this.precio,
+  });
 }
 
 class _SearchDelegate extends SearchDelegate<String> {

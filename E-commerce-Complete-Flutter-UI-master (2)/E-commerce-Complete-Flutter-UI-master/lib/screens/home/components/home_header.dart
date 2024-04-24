@@ -4,6 +4,7 @@ import '../../cart/cart_screen.dart';
 import 'icon_btn_with_counter.dart';
 import 'search_field.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
+import 'package:shop_app/screens/Carrito/CarritoScreen.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
@@ -23,7 +24,7 @@ class HomeHeader extends StatelessWidget {
             const SizedBox(width: 16),
             IconBtnWithCounter(
               svgSrc: "assets/icons/Cart Icon.svg",
-              press: () => Navigator.pushNamed(context, CartScreen.routeName),
+              press: () => Navigator.pushNamed(context, CarritoScreen.routeName),
             ),
             const SizedBox(width: 8),
             IconBtnWithCounter(
