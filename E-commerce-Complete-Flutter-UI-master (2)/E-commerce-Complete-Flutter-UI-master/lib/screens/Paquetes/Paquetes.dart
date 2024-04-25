@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Paquetes extends StatefulWidget {
   static const String routeName = '/PaquetesMostrar';
@@ -187,10 +188,48 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
              Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        showUtilerias = !showUtilerias;
-                      });
+                    onPressed: () async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      List<Map<String, dynamic>> _carrito = [];
+                      final String carritoJson = prefs.getString('carrito') ?? '[]';
+                      final List<dynamic> carrito = jsonDecode(carritoJson).cast<Map<String, dynamic>>();
+
+                      bool paqueteExistente = false;
+                      for (var item in carrito) {
+                        if (item['paquete'] == widget.category) {
+                          paqueteExistente = true;
+                          break;
+                        }
+                      }
+
+                      if (!paqueteExistente) {
+                        _carrito.addAll(carrito.map((paquete) => {
+                          ...paquete,
+                          'cantidad': 1,
+                        }));
+                        _carrito.add({
+                          'paquete': widget.category,
+                          'utilerias': widget.utilerias,
+                          'precio': widget.precio,
+                          'cantidad': 1,
+                        });
+                        await prefs.setString('carrito', jsonEncode(_carrito));
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Paquete añadido al carrito'),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('El paquete ya está en el carrito.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 194, 163, 27),
@@ -206,29 +245,69 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                   ),
                 ),
               Visibility(
-        visible: !showUtilerias, // Ocultar
-        child: Align(
-          alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                // Acción para añadir al carrito
-              },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 241, 161, 124),
-                  ),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  minimumSize: MaterialStateProperty.all<Size>(Size(50, 40)),
-                ),
-                icon: Icon(Icons.add_shopping_cart),
-                label: Text('Añadir al carrito'),
-              ),
-            ),
-          ),
-        ),
+                visible: !showUtilerias, // Ocultar
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        //Para añadir al carrito
+                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        List<Map<String, dynamic>> _carrito = [];
+                        final String carritoJson = prefs.getString('carrito') ?? '[]';
+                        final List<dynamic> carrito = jsonDecode(carritoJson).cast<Map<String, dynamic>>();
 
+                        bool paqueteExistente = false;
+                        for (var item in carrito) {
+                          if (item['paquete'] == widget.category) {
+                            paqueteExistente = true;
+                            break;
+                          }
+                        }
+
+                        if (!paqueteExistente) {
+                          _carrito.addAll(carrito.map((paquete) => {
+                            ...paquete,
+                            'cantidad': 1,
+                          }));
+                          _carrito.add({
+                            'paquete': widget.category,
+                            'utilerias': widget.utilerias,
+                            'precio': widget.precio,
+                            'cantidad': 1,
+                          });
+                          await prefs.setString('carrito', jsonEncode(_carrito));
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Paquete añadido al carrito'),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('El paquete ya está en el carrito.'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color.fromARGB(255, 241, 161, 124),
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        minimumSize: MaterialStateProperty.all<Size>(Size(50, 40)),
+                      ),
+                      icon: Icon(Icons.add_shopping_cart),
+                      label: Text('Añadir al carrito'),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
