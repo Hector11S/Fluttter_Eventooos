@@ -101,7 +101,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Precio Unitario: \$${precioOriginal.toStringAsFixed(2)}'),
+                  Text('Precio Unitario: \L.${precioOriginal.toStringAsFixed(2)}'),
                   Row(
                     children: [
                       IconButton(
@@ -121,7 +121,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
                       ),
                     ],
                   ),
-                  Text('Subtotal: \$${subtotal.toStringAsFixed(2)}'),
+                  Text('Subtotal: \L.${subtotal.toStringAsFixed(2)}'),
                 ],
               ),
               trailing: IconButton(
@@ -143,7 +143,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Precio del paquete: \$${precioPaquete.toStringAsFixed(2)}'),
+                  Text('Precio del paquete: \L.${precioPaquete.toStringAsFixed(2)}'),
                   Row(
                     children: [
                       IconButton(
@@ -163,7 +163,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
                       ),
                     ],
                   ),
-                  Text('Subtotal: \$${subtotal.toStringAsFixed(2)}'),
+                  Text('Subtotal: \L.${subtotal.toStringAsFixed(2)}'),
                 ],
               ),
               trailing: IconButton(
@@ -185,7 +185,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Total: \$${_calcularTotal().toStringAsFixed(2)}',
+              'Total: \L.${_calcularTotal().toStringAsFixed(2)}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
