@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/models/Clienteviewmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
-import 'package:shop_app/screens/sign_up/components/sign_up_form.dart';
+//import 'package:shop_app/screens/sign_up/components/sign_up_form.dart';
 
-import '../../otp/otp_screen.dart';
+//import '../../otp/otp_screen.dart';
 
 class CompleteProfileForm extends StatefulWidget {
   const CompleteProfileForm({super.key});
@@ -58,6 +58,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         });
       } else {
         throw Exception("Error al obtener el Municipio");
+        
       }
     } catch (e) {
       print("Error: $e");
@@ -90,25 +91,42 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         },
       );
 
-      print("Respuesta recibida: ${response.statusCode}");
-      print("Cuerpo de la respuesta: ${response.body}");
+   
+    print("Respuesta recibida: ${response.statusCode}");
+    print("Cuerpo de la respuesta: ${response.body}");
 
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Cliente creado exitosamente"),
-            backgroundColor: Colors.green,
-            
-          ),
-          
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error al crear el cliente"),
-            backgroundColor: Colors.red,
-          ),
-        );
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Cliente creado exitosamente"),
+          content: Text("El cliente ha sido creado exitosamente."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error al crear el cliente"),
+          content: Text("Ha ocurrido un error al crear el cliente."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
       }
     } catch (e) {
       print("Error: $e");

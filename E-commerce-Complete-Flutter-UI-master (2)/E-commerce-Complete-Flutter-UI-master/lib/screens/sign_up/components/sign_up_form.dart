@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-import '../../../components/custom_surfix_icon.dart';
+import 'package:flutter/material.dart';
+import 'package:shop_app/models/UsuarioViewModel.dart';
+import 'package:http/http.dart' as http;
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
+//import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
-import '../../../constants.dart';
-import '../../complete_profile/complete_profile_screen.dart';
+//import '../../../constants.dart';
+//import '../../complete_profile/complete_profile_screen.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -14,27 +18,62 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  String? usuario;
-  String? password;
-  String? conform_password;
+    UsuariosViewModel _usuarioViewModel = UsuariosViewModel(); 
+  String urlrestablecercontra = "http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/RestablecerContra";
   bool remember = false;
   final List<String?> errors = [];
 
-  void addError({String? error}) {
-    if (!errors.contains(error)) {
-      setState(() {
-        errors.add(error);
-      });
+ Future<void> _actualizarUsuario() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        print("Enviando solicitud...");
+
+        final response = await http.put(
+          Uri.parse(urlrestablecercontra),
+          body: jsonEncode({
+            'Usua_Usuario': _usuarioViewModel.Usua_Usuario,
+            'Usua_Contra': _usuarioViewModel.Usua_Contra,
+       
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        );
+
+        print("Respuesta recibida: ${response.statusCode}");
+        print("Cuerpo de la respuesta: ${response.body}");
+
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Usuario actualizado exitosamente"),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          String errorMessage = response.body;
+          print("Error al actualizar usuario: $errorMessage");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error al actualizar usuario: $errorMessage"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        print("Error: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error al actualizar usuario: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
-  void removeError({String? error}) {
-    if (errors.contains(error)) {
-      setState(() {
-        errors.remove(error);
-      });
-    }
-  }
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,92 +81,28 @@ class _SignUpFormState extends State<SignUpForm> {
       key: _formKey,
       child: Column(
         children: [
-          TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            onSaved: (newValue) => usuario = newValue,
-            onChanged: (value) {
-              if (value.isNotEmpty) {
-                removeError(error: kEmailNullError);
-              } else if (emailValidatorRegExp.hasMatch(value)) {
-                removeError(error: kInvalidEmailError);
-              }
-              return;
-            },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(error: kEmailNullError);
-                return "";
-              } else if (!emailValidatorRegExp.hasMatch(value)) {
-                addError(error: kInvalidEmailError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: "Usuario",
-              hintText: "Ingresa tu usuario",
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            obscureText: true,
-            onSaved: (newValue) => password = newValue,
-            onChanged: (value) {
-              if (value.isNotEmpty) {
-                removeError(error: kPassNullError);
-              } else if (value.length >= 8) {
-                removeError(error: kShortPassError);
-              }
-              password = value;
-            },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(error: kPassNullError);
-                return "";
-              } else if (value.length < 8) {
-                addError(error: kShortPassError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: "Contraseña",
-              hintText: "Ingresa tu contraseña",
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            obscureText: true,
-            onSaved: (newValue) => conform_password = newValue,
-            onChanged: (value) {
-              if (value.isNotEmpty) {
-                removeError(error: kPassNullError);
-              } else if (value.isNotEmpty && password == conform_password) {
-                removeError(error: kMatchPassError);
-              }
-              conform_password = value;
-            },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(error: kPassNullError);
-                return "";
-              } else if ((password != value)) {
-                addError(error: kMatchPassError);
-                return "";
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              labelText: "Confirma tu Contraseña",
-              hintText: "Ingresa tu contraseña nuevamente",
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-            ),
-          ),
+             TextFormField(
+                onChanged: (value) => _usuarioViewModel.Usua_Usuario = value,
+                decoration: InputDecoration(labelText: 'Usuario'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa un usuario';
+                  }
+                  return null;
+                },
+              ),
+             SizedBox(height: 16),
+              TextFormField(
+                onChanged: (value) => _usuarioViewModel.Usua_Contra = value,
+                decoration: InputDecoration(labelText: 'Contraseña'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa una contraseña';
+                  }
+                  return null;
+                },
+              ),
+         
           FormError(errors: errors),
           const SizedBox(height: 20),
           ElevatedButton(
@@ -135,7 +110,8 @@ class _SignUpFormState extends State<SignUpForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                 _actualizarUsuario();
+                Navigator.pushNamed(context, SignInScreen.routeName);
               }
             },
             child: const Text("Continuar"),
@@ -145,3 +121,4 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 }
+ 

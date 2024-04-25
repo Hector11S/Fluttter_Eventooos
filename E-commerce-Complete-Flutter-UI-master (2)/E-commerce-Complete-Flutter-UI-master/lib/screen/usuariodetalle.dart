@@ -22,7 +22,7 @@ class _UsuarioDetallesScreenState extends State<UsuarioDetallesScreen> {
   }
 
   Future<UsuariosViewModel> obtenerDetalleUsuario(int userId) async {
-    final respuesta = await http.get(Uri.parse('http://www.gestioneventooooss.somee.com/API/Usuario/Fill/$userId'));
+    final respuesta = await http.get(Uri.parse('http://www.gestioneventooooss.somee.com/Api/Usuario/FillUsuarios/$userId'));
     if (respuesta.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(respuesta.body);
       if (jsonData.isNotEmpty) {
@@ -58,11 +58,7 @@ class _UsuarioDetallesScreenState extends State<UsuarioDetallesScreen> {
               children: <Widget>[
                 ListTile(title: Text('ID: ${usuario.Usua_Id}')),
                 ListTile(title: Text('Usuario: ${usuario.Usua_Usuario}')),
-                ListTile(
-  title: Text('Administrador:'),
-  trailing: Text(usuario.Usua_Admin == 'Administrador' ? 'Sí' : usuario.Usua_Admin != null ? 'No' : 'Desconocido'),
-),
-
+               
                 ListTile(title: Text('Nombre: ${usuario.Usua_Usuario}')),
                 ListTile(title: Text('Rol: ${usuario.Role_Id}')),
                 Padding(
@@ -84,13 +80,13 @@ class _UsuarioDetallesScreenState extends State<UsuarioDetallesScreen> {
                     DataRow(
                       cells: [
                         DataCell(Text('Creación')),
-                        DataCell(Text(usuario.Usua_FechaCreacion?.toString() ?? 'Desconocido')),
+                        DataCell(Text(usuario.Usua_Creacion?.toString() ?? 'Desconocido')),
                       ],
                     ),
                     DataRow(
                       cells: [
                         DataCell(Text('Modificación')),
-                        DataCell(Text(usuario.Usua_FechaModificacion?.toString() ?? 'Desconocido')),
+                        DataCell(Text(usuario.Usua_Creacion?.toString() ?? 'Desconocido')),
                       ],
                     ),
                   ],

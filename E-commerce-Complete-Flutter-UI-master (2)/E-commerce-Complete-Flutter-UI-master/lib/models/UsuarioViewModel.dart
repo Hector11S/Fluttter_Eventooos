@@ -2,7 +2,7 @@ class UsuariosViewModel{
 
    int? Usua_Id;
    String? Usua_Usuario;
-   String? Usua_Admin;
+   bool? Usua_Admin;
    String? Usua_Contra;
    int? Role_Id;
    int? Empl_Id;
@@ -48,14 +48,14 @@ class UsuariosViewModel{
   );
 
   Map<String, dynamic> toJson() => {
-    'usua_id': Usua_Id,
-    'usua_usuario': Usua_Usuario,
-    'usua_EsAdmin': Usua_Admin,
-    'Usua_Clave': Usua_Contra,
-    'role_Id': Role_Id,
+    'usua_Id': Usua_Id,
+    'usua_Usuario': Usua_Usuario,
+    'usua_Admin': Usua_Admin,
+    'usua_Contra': Usua_Contra,
+    'rol_Id': Role_Id,
     'clie_Id': Clie_Id,
     'empl_Id': Empl_Id,
-    'usua_Creacion': Usua_Creacion,
+    'usua_Usua_Creacion': Usua_Creacion,
     'usua_FechaCreacion': Usua_FechaCreacion,
     'usua_Modificacion': Usua_Modificacion,
     'usua_FechaModificacion': Usua_FechaModificacion,
