@@ -185,65 +185,27 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                 ),
               ),
               Spacer(),
-             Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      List<Map<String, dynamic>> _carrito = [];
-                      final String carritoJson = prefs.getString('carrito') ?? '[]';
-                      final List<dynamic> carrito = jsonDecode(carritoJson).cast<Map<String, dynamic>>();
-
-                      bool paqueteExistente = false;
-                      for (var item in carrito) {
-                        if (item['paquete'] == widget.category) {
-                          paqueteExistente = true;
-                          break;
-                        }
-                      }
-
-                      if (!paqueteExistente) {
-                        _carrito.addAll(carrito.map((paquete) => {
-                          ...paquete,
-                          'cantidad': 1,
-                        }));
-                        _carrito.add({
-                          'paquete': widget.category,
-                          'utilerias': widget.utilerias,
-                          'precio': widget.precio,
-                          'cantidad': 1,
-                        });
-                        await prefs.setString('carrito', jsonEncode(_carrito));
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Paquete añadido al carrito'),
-                            duration: Duration(seconds: 2),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('El paquete ya está en el carrito.'),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 194, 163, 27),
-                    ),
-                    icon: Icon(
-                      showUtilerias ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      showUtilerias ? "Ocultar detalles" : "Detalles",
-                      style: TextStyle(color: Colors.white),
-                    ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      showUtilerias = !showUtilerias;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 194, 163, 27),
+                  ),
+                  icon: Icon(
+                    showUtilerias ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    showUtilerias ? "Ocultar detalles" : "Detalles",
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
+              ),
               Visibility(
                 visible: !showUtilerias, // Ocultar
                 child: Align(
