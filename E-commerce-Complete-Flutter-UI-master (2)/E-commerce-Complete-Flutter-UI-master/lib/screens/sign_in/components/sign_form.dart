@@ -107,7 +107,7 @@ class _SignFormState extends State<SignForm> {
                   });
                 },
               ),
-              const Text("Remember me"),
+              const Text("Recuerdame"),
               const Spacer(),
               GestureDetector(
                 onTap: () => Navigator.pushNamed(

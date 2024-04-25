@@ -20,28 +20,42 @@ class OtpScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 16),
                 const Text(
                   "OTP Verification",
                   style: headingStyle,
                 ),
-                const Text("We sent your code to +1 898 860 ***"),
+                const SizedBox(height: 8),
+                Text(
+                  "We sent your code to +1 898 860 ***",
+                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                ),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("This code will expired in "),
+                    const Icon(
+                      Icons.lock,
+                      color: kPrimaryColor,
+                    ),
+                    const SizedBox(width: 10),
                     TweenAnimationBuilder(
                       tween: Tween(begin: 30.0, end: 0.0),
                       duration: const Duration(seconds: 30),
                       builder: (_, dynamic value, child) => Text(
                         "00:${value.toInt()}",
-                        style: const TextStyle(color: kPrimaryColor),
+                        style: const TextStyle(
+                          color: kPrimaryColor,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const OtpForm(),
+                const SizedBox(height: 20),
+                OtpForm(),
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
@@ -49,7 +63,11 @@ class OtpScreen extends StatelessWidget {
                   },
                   child: const Text(
                     "Resend OTP Code",
-                    style: TextStyle(decoration: TextDecoration.underline),
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 16,
+                      color: kPrimaryColor,
+                    ),
                   ),
                 )
               ],

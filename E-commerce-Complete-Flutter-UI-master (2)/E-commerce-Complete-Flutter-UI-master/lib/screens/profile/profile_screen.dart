@@ -8,19 +8,19 @@ import 'package:shop_app/screen/usuariodetalle.dart';
 class UsuariosViewModel {
   int usuarId;
   String? usuarUsuario;
-  String? rolesDescripcion;
+  String? usuaAdmin;
 
   UsuariosViewModel({
     required this.usuarId,
     required this.usuarUsuario,
-    this.rolesDescripcion,
+    this.usuaAdmin,
   });
 
   factory UsuariosViewModel.fromJson(Map<String, dynamic> json) {
     return UsuariosViewModel(
       usuarId: json['usua_Id'],
       usuarUsuario: json['usua_Usuario'],
-      rolesDescripcion: json['role_Descripcion'],
+      usuaAdmin: json['usua_Admin'].toString(),
     );
   }
 }
@@ -102,122 +102,111 @@ class _MyWidgetState extends State<WidgetUsuario> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Listado de Usuarios"),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CrearUsuarioView()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding:
-              EdgeInsets.symmetric(horizontal: 20.0), // Espacio a los lados
-          child: Column(
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  headingTextStyle: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  dataRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromARGB(255, 255, 255, 255)!,
-                  ),
-                  columns: [
-                    DataColumn(
-                      label: Text('ID'),
-                    ),
-                    DataColumn(
-                      label: Text('Usuario'),
-                    ),
-                    DataColumn(
-                      label: Text('Rol'),
-                    ),
-                    DataColumn(
-                      label: Text('Acciones'),
-                    ),
-                  ],
-                  rows: _usuarios.map((user) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(user.usuarId.toString())),
-                        DataCell(Text(user.usuarUsuario.toString())),
-                        DataCell(Text(user.rolesDescripcion ?? "")),
-                        DataCell(
-                          Row(
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditarUsuarioView(
-                                            userId: user.usuarId)),
-                                  );
-                                },
-                                child: const Text(
-                                  'Editar',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              OutlinedButton(
-                                onPressed: () {
-                                  _confirmarEliminacion(user.usuarId);
-                                },
-                                child: const Text(
-                                  'Eliminar',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                                  OutlinedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => UsuarioDetallesScreen(userId: user.usuarId)),
-                                  );
-                                },
-                                child: const Text(
-                                  'Detalle',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            ],
-                          ),
-                          
-                        ),
-                      ],
-                    );
-                  }).toList(),
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text("Listado de Usuarios"),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Cambia el color de fondo del AppBar
+      centerTitle: true,
+      elevation: 0,
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CrearUsuarioView()),
+            );
+          },
+        ),
+      ],
+    ),
+    body: SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                headingTextStyle: TextStyle(
+                  color: Colors.black87, // Cambia el color del texto del encabezado
+                  fontWeight: FontWeight.bold,
                 ),
+                dataRowColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.white,
+                ),
+                columns: [
+                  DataColumn(
+                    label: Text('ID'),
+                  ),
+                  DataColumn(
+                    label: Text('Usuario'),
+                  ),
+                  DataColumn(
+                    label: Text('Admin'),
+                  ),
+                  DataColumn(
+                    label: Text('Acciones'),
+                  ),
+                ],
+                rows: _usuarios.map((user) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(user.usuarId.toString())),
+                      DataCell(Text(user.usuarUsuario.toString())),
+                      DataCell(Text(user.usuaAdmin ?? "")),
+                      DataCell(
+                        Row(
+                          children: [
+                            IconButton( // Cambia los botones a iconos para las acciones
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditarUsuarioView(userId: user.usuarId)),
+                                );
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _confirmarEliminacion(user.usuarId);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.details),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => UsuarioDetallesScreen(userId: user.usuarId)),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
-              SizedBox(height: 20), // Espacio entre la tabla y la paginación
-              BootstrapPagination(
-                currentPage: 1, // Cambia por el número de página actual
-                totalPages: 10, // Cambia por el número total de páginas
-                onPageChanged: (page) {},
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+            BootstrapPagination(
+              currentPage: 1,
+              totalPages: 10,
+              onPageChanged: (page) {},
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Future<void> _confirmarEliminacion(int usua_Id) async {
     bool confirmacion = await showDialog(

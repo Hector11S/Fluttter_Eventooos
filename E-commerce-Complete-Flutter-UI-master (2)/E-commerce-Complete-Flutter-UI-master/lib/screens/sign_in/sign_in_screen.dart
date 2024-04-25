@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/constants.dart';
 
 import '../../components/no_account_text.dart';
 import '../../components/socal_card.dart';
@@ -22,17 +23,16 @@ class SignInScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 16),
-                  const Text(
-                    "Bienvenido",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      const SizedBox(height: 16),
+                  const Text("Bienvenido", style: headingStyle),
+                  const SizedBox(height: 8),
+                  Image.asset(
+                    "assets/images/estelogosi.png",
+                    width: 400,
+                    height: 150,
                   ),
                   const Text(
-                    "Inicia Sesion Con tu Correo y contraseña \no hazlo con una red Social",
+                    "Inicia Sesion Con tu Usuario y contraseña \no hazlo con una red Social",
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),

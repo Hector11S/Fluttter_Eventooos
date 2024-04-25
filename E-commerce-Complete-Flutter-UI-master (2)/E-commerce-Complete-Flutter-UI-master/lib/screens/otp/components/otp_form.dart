@@ -16,7 +16,7 @@ class OtpForm extends StatefulWidget {
 
 class _OtpFormState extends State<OtpForm> {
   TextEditingController otpController = TextEditingController();
-  String urlBase = 'http://www.gestioneventooooss.somee.com/Api/Usuario/MostrarCodigo';
+   String urlBase = 'http://www.gestioneventooooss.somee.com/Api/Usuario/MostrarCodigo/';
 
   @override
   void dispose() {
@@ -24,29 +24,28 @@ class _OtpFormState extends State<OtpForm> {
     super.dispose();
   }
 
- Future<void> validateOtp(BuildContext context, String otp) async {
-  final url = '$urlBase$otp';
-  final response = await http.get(Uri.parse(url));
+   Future<void> validateOtp(BuildContext context, String otp) async {
+    final url = '$urlBase$otp';
+    final response = await http.get(Uri.parse(url));
 
-  if (response.statusCode == 200) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Código OTP válido. Redirigiendo...'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-
+     if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Código OTP válido. Redirigiendo...'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     // Aquí puedes agregar la lógica para la navegación después de validar el OTP
     Navigator.pushNamed(context, SignUpScreen.routeName);
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Error al validar el código OTP. Por favor, inténtalo de nuevo.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-}
+     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al validar el código OTP. Por favor, inténtalo de nuevo.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+   }
 
   @override
   Widget build(BuildContext context) {

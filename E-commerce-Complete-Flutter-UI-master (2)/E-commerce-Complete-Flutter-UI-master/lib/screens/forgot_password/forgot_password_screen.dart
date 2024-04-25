@@ -6,7 +6,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   static String routeName = "/forgot_password";
 
   const ForgotPasswordScreen({super.key});
- @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -20,8 +20,14 @@ class ForgotPasswordScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 16),
+            Icon(
+              Icons.lock_open, // Icono de candado abierto
+              size: 100,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
             Text(
-              "Recuperar Contraseña",
+              "¡Olvidó su contraseña?",
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
@@ -31,7 +37,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Por favor, introduzca su correo electrónico y le enviaremos su enlace para volver a su cuenta",
+              "No se preocupe, estamos aquí para ayudarle. Por favor, introduzca su Usuario y le enviaremos un codigo para restablecer su contraseña.",
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -42,7 +48,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                 // Acción al presionar el botón
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Color del texto del botón
+                foregroundColor: Colors.white,
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Color del texto del botón
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20), // Bordes redondeados
                 ),
