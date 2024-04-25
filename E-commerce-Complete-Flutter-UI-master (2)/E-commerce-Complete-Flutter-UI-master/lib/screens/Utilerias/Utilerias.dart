@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utilerias extends StatefulWidget {
   static const String routeName = '/Utilerias';
@@ -19,6 +20,7 @@ class _UtileriasState extends State<Utilerias> {
   late List<dynamic> _productosFiltrados = [];
   late TextEditingController _searchController;
   late ScrollController _scrollController;
+  List<dynamic> _carrito = [];
 
   @override
   void initState() {
@@ -26,6 +28,7 @@ class _UtileriasState extends State<Utilerias> {
     _getListado();
     _searchController = TextEditingController();
     _scrollController = ScrollController();
+    _cargarCarrito();
   }
 
   @override
@@ -47,10 +50,68 @@ class _UtileriasState extends State<Utilerias> {
     }
   }
 
+  Future<void> _cargarCarrito() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String carritoJson = prefs.getString('carrito') ?? '[]';
+    final List<dynamic> carrito = jsonDecode(carritoJson).cast<dynamic>();
+    setState(() {
+      _carrito.addAll(carrito);
+    });
+  }
+
   void _updateFilteredProducts(List<dynamic> filteredProducts) {
     setState(() {
       _productosFiltrados = filteredProducts;
     });
+  }
+
+  void _agregarAlCarrito(dynamic producto) async {
+    final bool yaEstaEnCarrito =
+        _carrito.any((item) => item['util_Id'] == producto['util_Id']);
+
+    if (yaEstaEnCarrito) {
+      _mostrarSnackBar('Este producto ya está en el carrito.', Colors.green);
+      return;
+    }
+
+    setState(() {
+      _carrito.add(producto);
+    });
+    await _guardarCarrito();
+
+   
+    _mostrarSnackBar('Producto añadido al carrito', Colors.green);
+  }
+
+  Future<void> _guardarCarrito() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('carrito', jsonEncode(_carrito));
+  }
+
+  void _mostrarSnackBar(String mensaje, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      backgroundColor: color,
+    ));
+  }
+
+  Widget _buildAddToCartButton(dynamic producto) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        _agregarAlCarrito(producto);
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(
+            Color.fromARGB(255, 241, 161, 124)),
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        minimumSize: MaterialStateProperty.all(Size(120, 40)),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          EdgeInsets.symmetric(horizontal: 20),
+        ),
+      ),
+      icon: Icon(Icons.add_shopping_cart),
+      label: Text('Añadir al carrito'),
+    );
   }
 
   @override
@@ -86,6 +147,7 @@ class _UtileriasState extends State<Utilerias> {
                   producto['util_Precio'] != null
                       ? double.parse(producto['util_Precio'].toString())
                       : 0.0,
+                  producto,
                 );
               },
             ),
@@ -93,7 +155,7 @@ class _UtileriasState extends State<Utilerias> {
   }
 
   Widget _buildProductoItem(
-      String descripcion, String imagenUrl, double precio) {
+      String descripcion, String imagenUrl, double precio, dynamic producto) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -123,47 +185,12 @@ class _UtileriasState extends State<Utilerias> {
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 5),
-        ElevatedButton(
-          onPressed: () {
-            _addToCart(descripcion, imagenUrl, precio);
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-                Color.fromARGB(255, 241, 161, 124)),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            minimumSize: MaterialStateProperty.all(Size(120, 40)),
-          ),
-          child: Text('Añadir al carrito'),
-        ),
+        _buildAddToCartButton(producto),
         SizedBox(height: 10),
         Divider(),
       ],
     );
   }
-
-  List<CarritoItem> _carrito = [];
-
-  void _addToCart(String descripcion, String imagenUrl, double precio) {
-    setState(() {
-      _carrito.add(CarritoItem(
-        descripcion: descripcion,
-        imagenUrl: imagenUrl,
-        precio: precio,
-      ));
-    });
-  }
-}
-
-class CarritoItem {
-  final String descripcion;
-  final String imagenUrl;
-  final double precio;
-
-  CarritoItem({
-    required this.descripcion,
-    required this.imagenUrl,
-    required this.precio,
-  });
 }
 
 class _SearchDelegate extends SearchDelegate<String> {

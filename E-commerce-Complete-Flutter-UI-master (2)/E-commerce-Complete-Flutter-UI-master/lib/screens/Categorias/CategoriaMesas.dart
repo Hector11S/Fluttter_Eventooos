@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoriaMesas extends StatefulWidget {
   static const String routeName = '/categoria_mesas';
@@ -82,6 +83,7 @@ class _CategoriaMesasState extends State<CategoriaMesas> {
                   categoria['util_Precio'] != null
                       ? double.parse(categoria['util_Precio'].toString())
                       : 0.0,
+                  categoria, 
                 );
               },
             ),
@@ -89,7 +91,7 @@ class _CategoriaMesasState extends State<CategoriaMesas> {
   }
 
   Widget _buildCategoriaItem(
-      String descripcion, String imagenUrl, double precio) {
+      String descripcion, String imagenUrl, double precio, Map<String, dynamic> producto) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -119,20 +121,70 @@ class _CategoriaMesasState extends State<CategoriaMesas> {
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 5),
-        ElevatedButton(
-          onPressed: () {},
+        ElevatedButton.icon(
+          onPressed: () {
+       
+            _agregarAlCarrito(producto);
+          },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-                const Color.fromARGB(255, 241, 161, 124)),
+              const Color.fromARGB(255, 241, 161, 124),
+            ),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            minimumSize: MaterialStateProperty.all(Size(150, 40)),
+            minimumSize: MaterialStateProperty.all<Size>(Size(150, 40)),
           ),
-          child: Text('Añadir al carrito'),
+          icon: Icon(Icons.add_shopping_cart),
+          label: Text('Añadir al carrito'),
         ),
         SizedBox(height: 10),
         Divider(),
       ],
     );
+  }
+
+  void _agregarAlCarrito(Map<String, dynamic> producto) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> _carrito = [];
+    final String carritoJson = prefs.getString('carrito') ?? '[]';
+    final List<dynamic> carrito = jsonDecode(carritoJson).cast<Map<String, dynamic>>();
+
+
+    bool productoExistente = false;
+    for (var item in carrito) {
+      if (item['util_Descripcion'] == producto['util_Descripcion']) {
+        productoExistente = true;
+        break;
+      }
+    }
+
+    if (!productoExistente) {
+      _carrito.addAll(carrito.map((producto) => {
+        ...producto,
+        'cantidad': 1,
+      }));
+      _carrito.add({
+        ...producto,
+        'cantidad': 1,
+      });
+      await prefs.setString('carrito', jsonEncode(_carrito));
+
+ 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Producto añadido al carrito'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('El producto ya está en el carrito.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }
 
