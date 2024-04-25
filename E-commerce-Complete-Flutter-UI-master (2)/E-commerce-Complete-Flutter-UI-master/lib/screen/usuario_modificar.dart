@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop_app/screen/usuario_insertar.dart';
+//import 'package:shop_app/screen/usuario_insertar.dart';
 
 class EditarUsuarioView extends StatefulWidget {
   final int userId;
@@ -15,7 +15,7 @@ class EditarUsuarioView extends StatefulWidget {
 class _EditarUsuarioViewState extends State<EditarUsuarioView> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _usuarioController = TextEditingController();
-  TextEditingController _contrasenaController = TextEditingController();
+ 
   int? _selectedRoleId;
   int? _selectedEmplId;
   int? _selectedClienId;
@@ -23,7 +23,7 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
   List<Rol> _roles = [];
   List<Empleados1> _Empl = [];
   List<Clienete2> _Clien = [];
-  String urlUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/Fill";
+ // String urlUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/FillUsuarios";
   String urlActualizarUsuario = "http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/Update";
   String urlRoles = "http://www.gestioneventooooss.somee.com/Api/Rol/List";
   String urlEmpl = "http://www.gestioneventooooss.somee.com/Api/Empleado/List";
@@ -32,33 +32,47 @@ class _EditarUsuarioViewState extends State<EditarUsuarioView> {
   @override
   void initState() {
     super.initState();
-    _fetchUsuario();
+    _fetchUsuario(widget.userId);
     _fetchRoles(); 
     _fetchClien();
     _fetchEmple();
   }
 
-Future<void> _fetchUsuario() async {
+ Future<void> _fetchUsuario(int userId) async {
   try {
-    final response = await http.get(Uri.parse('$urlUsuario?Usua_Id=${widget.userId}'));
+    final urlLlenar = "http://www.gestioneventooooss.somee.com/Api/Usuario/FillUsuarios/$userId";
+    final response = await http.get(Uri.parse(urlLlenar));
+
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final userData = responseData['data']; // Verifica la estructura de tu respuesta JSON
-      setState(() {
-        _usuarioController.text = userData['usua_Usuario'] ?? '';
-        _contrasenaController.text = userData['usua_Contra'] ?? '';
-        _selectedRoleId = userData['rol_Id'];
-        _selectedEmplId = userData['empl_Id'];
-        _selectedClienId = userData['clie_Id'];
-        _esAdministrador = userData['usua_Admin'] ?? false;
-      });
+      final List<dynamic> userDataList = jsonDecode(response.body);
+      if (userDataList.isNotEmpty) {
+        final Map<String, dynamic> userData = userDataList[0]; // Toma el primer elemento de la lista, suponiendo que solo hay un usuario
+
+        setState(() {
+          _usuarioController.text = userData['usua_Usuario'].toString();
+
+          _selectedRoleId = userData['rol_Id'] != null ? int.parse(userData['rol_Id'].toString()) : null;
+          _selectedEmplId = userData['empl_Id'] != null ? int.parse(userData['empl_Id'].toString()) : null;
+          _selectedClienId = userData['clie_Id'] != null ? int.parse(userData['clie_Id'].toString()) : null;
+          _esAdministrador = userData['usua_Administrador'] ?? false;
+        });
+      } else {
+        throw Exception("No se encontraron datos de usuario");
+      }
     } else {
       throw Exception("Error al obtener información del usuario");
     }
   } catch (e) {
     print("Error: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error al obtener información del usuario"),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 }
+
 
 
   Future<void> _fetchRoles() async {
