@@ -184,45 +184,51 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
                 ),
               ),
               Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      showUtilerias = !showUtilerias;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 194, 163, 27),
-                  ),
-                  child: Text(
-                    showUtilerias ? "Ocultar detalles" : "Detalles",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: !showUtilerias, // Ocultar
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10, right: 55),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // añadir al carrito
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromARGB(255, 241, 161, 124)),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        minimumSize: MaterialStateProperty.all(Size(50, 40)),
-                      ),
-                      child: Text('Añadir al carrito'),
+             Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        showUtilerias = !showUtilerias;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 194, 163, 27),
+                    ),
+                    icon: Icon(
+                      showUtilerias ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      showUtilerias ? "Ocultar detalles" : "Detalles",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
+              Visibility(
+        visible: !showUtilerias, // Ocultar
+        child: Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                // Acción para añadir al carrito
+              },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color.fromARGB(255, 241, 161, 124),
+                  ),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  minimumSize: MaterialStateProperty.all<Size>(Size(50, 40)),
+                ),
+                icon: Icon(Icons.add_shopping_cart),
+                label: Text('Añadir al carrito'),
               ),
+            ),
+          ),
+        ),
+
             ],
           ),
         ),

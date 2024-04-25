@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/Utilerias/Utilerias.dart';
 import 'package:shop_app/screens/home/components/section_title.dart';
 
@@ -32,7 +33,7 @@ class _UtileriasHomeState extends State<UtileriasHome> {
       setState(() {
         utilerias = utileriasData
             .take(5)
-            .toList(); //Toma solo los 5 primeros productos de la lista
+            .toList(); //solo los 5 primeros productos de la lista
       });
     } else {
       throw Exception('Error al cargar la API');
@@ -61,7 +62,9 @@ class _UtileriasHomeState extends State<UtileriasHome> {
                 image: utileria['util_Imagen'],
                 category: utileria['util_Descripcion'],
                 numOfBrands: '\L${utileria['util_Precio']}',
-                press: () {},
+                press: () {
+                  _agregarAlCarrito(utileria);
+                },
                 isFirst: index == 0,
               );
             }),
@@ -69,6 +72,49 @@ class _UtileriasHomeState extends State<UtileriasHome> {
         ),
       ],
     );
+  }
+
+  void _agregarAlCarrito(Map<String, dynamic> producto) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> _carrito = [];
+    final String carritoJson = prefs.getString('carrito') ?? '[]';
+    final List<dynamic> carrito = jsonDecode(carritoJson).cast<Map<String, dynamic>>();
+
+   
+    bool productoExistente = false;
+    for (var item in carrito) {
+      if (item['util_Descripcion'] == producto['util_Descripcion']) {
+        productoExistente = true;
+        break;
+      }
+    }
+
+    if (!productoExistente) {
+      _carrito.addAll(carrito.map((producto) => {
+        ...producto,
+        'cantidad': 1,
+      }));
+      _carrito.add({
+        ...producto,
+        'cantidad': 1,
+      });
+      await prefs.setString('carrito', jsonEncode(_carrito));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Producto añadido al carrito'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green, 
+        ),
+      );
+    } else {
+    
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('El producto ya está en el carrito.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }
 
@@ -141,18 +187,19 @@ class SpecialOfferCard extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                       ),
                       SizedBox(height: 5),
-                      ElevatedButton(
+                      ElevatedButton.icon(
                         onPressed: () {
-                          // para añadir al carrito
+                          press();
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 241, 161, 124)),
-                          minimumSize:
-                              MaterialStateProperty.all<Size>(Size(140, 35)),
+                            const Color.fromARGB(255, 241, 161, 124),
+                          ),
+                          minimumSize: MaterialStateProperty.all<Size>(Size(140, 35)),
                         ),
-                        child: Text("Añadir al carrito"),
-                      ),
+                        icon: Icon(Icons.add_shopping_cart),
+                        label: Text("Añadir al carrito"),
+                      )
                     ],
                   ),
                 ),

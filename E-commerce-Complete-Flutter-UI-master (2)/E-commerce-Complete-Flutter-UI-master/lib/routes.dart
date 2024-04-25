@@ -52,5 +52,5 @@ final Map<String, WidgetBuilder> routes = {
   UtileriasHome.routeName: (context) => const UtileriasHome(),
   Paquetes.routeName: (context) => const Paquetes(),
   CrearUsuarioView.routeName: (context) => const CrearUsuarioView(),
-   CarritoScreen.routeName: (context) => const CarritoScreen(carrito: []),
+  CarritoScreen.routeName: (context) => const CarritoScreen(),
 };
