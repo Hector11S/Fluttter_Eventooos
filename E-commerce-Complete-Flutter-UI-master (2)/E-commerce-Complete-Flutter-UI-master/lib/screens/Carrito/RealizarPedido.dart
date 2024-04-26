@@ -22,7 +22,7 @@ class _RealizarPedidoFormState extends State<RealizarPedidoForm> {
   List<Municipio> _Muni = [];
   List<Evento> _Even = [];
   int? _selectedCivilId;
-  int? _selectedMuniId ;
+  String? _selectedMuniId ;
   int? _selectedEventoId;
   
   String urlClienteregistro = "http://www.gestioneventooooss.somee.com/Api/Cliente/API/Cliente/PaquetesInsertar";
@@ -90,33 +90,49 @@ void initState() {
     }
   }
 
- Future<void> _RegistroCliente() async {
+Future<void> _RegistroCliente() async {
   if (_formKey.currentState!.validate()) {
     try {
       print("Enviando solicitud...");
 
+      // Verifica y asigna valores predeterminados si los campos son nulos
+      String identidad = _ClienteModel.Clie_Identidad ?? '';
+      String nombre = _ClienteModel.Clie_Nombre ?? '';
+      String apellido = _ClienteModel.Clie_Apellido ?? '';
+      String telefono = _ClienteModel.Clie_Telefono ?? '';
+      String correoElectronico = _ClienteModel.Clie_CorreoElectronico ?? '';
+      String sexo = _ClienteModel.Clie_Sexo ?? '';
+      int? estadoCivilId = _selectedCivilId;
+      String? municipioId = _selectedMuniId;
+      int? eventoId = _selectedEventoId;
+      double subtotal = _ClienteModel.paDe_Subtotal ?? 0.0;
+      double total = _ClienteModel.paDe_Total ?? 0.0;
+      String descripcionEvento = _ClienteModel.even_Descripcion ?? '';
+      DateTime fechaInicioEvento = _ClienteModel.even_FechaInicio ?? DateTime.now();
+      DateTime fechaFinEvento = _ClienteModel.even_FechaFin ?? DateTime.now();
+      String sexoEvento = _ClienteModel.even_Sexo ?? '';
+      String utilIds = _ClienteModel.util_IdList ?? '';
+
       final response = await http.post(
         Uri.parse(urlClienteregistro),
-      body: jsonEncode({
-  "clie_Identidad": _ClienteModel.Clie_Identidad,
-  "clie_Nombre": _ClienteModel.Clie_Nombre,
-  "clie_Apellido": _ClienteModel.Clie_Apellido,
-  "clie_Telefono": _ClienteModel.Clie_Telefono,
-  "clie_CorreoElectronico": _ClienteModel.Clie_CorreoElectronico,
-  "clie_Sexo": _ClienteModel.Clie_Sexo,
-  "esta_Id": _selectedCivilId,
- "muni_Id": _selectedMuniId,
- 'ever_Id': _selectedEventoId,
- 'paDe_Subtotal': _ClienteModel.paDe_Subtotal,
-  'paDe_Total': _ClienteModel.paDe_Total,
-   'even_Descripcion': _ClienteModel.even_Descripcion,
-    'even_FechaInicio': _ClienteModel.even_FechaInicio,
-     'even_FechaFin': _ClienteModel.even_FechaFin,
-      'even_Sexo': _ClienteModel.even_Sexo,
-       'util_IdList': _ClienteModel.util_IdList,
-
-}),
-
+        body: jsonEncode({
+          "clie_Identidad": identidad,
+          "clie_Nombre": nombre,
+          "clie_Apellido": apellido,
+          "clie_Telefono": telefono,
+          "clie_CorreoElectronico": correoElectronico,
+          "clie_Sexo": sexo,
+          "esta_Id": estadoCivilId,
+          "muni_Id": municipioId,
+          "ever_Id": eventoId,
+          "paDe_Subtotal": subtotal,
+          "paDe_Total": total,
+          "even_Descripcion": descripcionEvento,
+          "even_FechaInicio": fechaInicioEvento.toIso8601String(),
+          "even_FechaFin": fechaFinEvento.toIso8601String(),
+          "even_Sexo": sexoEvento,
+          "util_IdList": utilIds,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -130,9 +146,7 @@ void initState() {
           SnackBar(
             content: Text("Pedido añadido exitosamente"),
             backgroundColor: Colors.green,
-            
           ),
-          
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -147,6 +161,7 @@ void initState() {
     }
   }
 }
+
 
 
   @override
@@ -256,27 +271,28 @@ DropdownButtonFormField<String>(
                 },
               ), 
                 const SizedBox(height: 20),
-              DropdownButtonFormField<int>(
-                value: _selectedMuniId,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedMuniId = newValue!;
-                  });
-                },
-                items: _Muni.map((muni) {
-                  return DropdownMenuItem<int>(
-                    value: int.parse(muni.id),
-                    child: Text(muni.descripcion),
-                  );
-                }).toList(),
-                decoration: InputDecoration(labelText: 'Municipios'),
-                validator: (value) {
-                  if (value == null || value == -1) {
-                    return 'Por favor selecciona un Municipio';
-                  }
-                  return null;
-                },
-              ),
+          DropdownButtonFormField<String>(
+  value: _Muni.isNotEmpty ? _selectedMuniId ?? _Muni.first.id : null,
+  onChanged: (newValue) {
+    setState(() {
+      _selectedMuniId = newValue;
+    });
+  },
+  items: _Muni.map((muni) {
+    return DropdownMenuItem<String>(
+      value: muni.id,
+      child: Text(muni.descripcion),
+    );
+  }).toList(),
+  decoration: InputDecoration(labelText: 'Municipios'),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor selecciona un Municipio';
+    }
+    return null;
+  },
+),
+
 
               SizedBox(height: 16),
               DropdownButtonFormField<int>(
