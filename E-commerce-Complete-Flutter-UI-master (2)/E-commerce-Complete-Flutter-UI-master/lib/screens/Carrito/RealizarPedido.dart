@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/PedidosViewModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 import 'package:shop_app/screens/sign_up/components/sign_up_form.dart';
 
@@ -435,7 +436,7 @@ ElevatedButton(
   onPressed: () {
     if (_formKey.currentState!.validate()) {
       _RegistroCliente();
-      Navigator.pushNamed(context, SignInScreen.routeName);
+      Navigator.pushNamed(context, InitScreen.routeName);
     }
   },
   child: const Text("Guardar"),
