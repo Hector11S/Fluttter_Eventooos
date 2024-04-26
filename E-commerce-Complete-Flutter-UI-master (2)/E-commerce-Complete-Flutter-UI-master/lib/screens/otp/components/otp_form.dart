@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 //import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
 import 'package:shop_app/screens/sign_up/sign_up_screen.dart';
@@ -52,16 +53,32 @@ class _OtpFormState extends State<OtpForm> {
     return Form(
       child: Column(
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.15),
-          TextFormField(
-            controller: otpController,
-            style: const TextStyle(fontSize: 24),
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              labelText: 'Ingrese el código OTP',
-            ),
-          ),
+TextFormField(
+  controller: otpController,
+  style: const TextStyle(fontSize: 24),
+  keyboardType: TextInputType.number,
+  textAlign: TextAlign.center,
+  maxLength: 6,
+  inputFormatters: [
+    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // Permite solo dígitos
+  ],
+  decoration: InputDecoration(
+    labelText: 'Ingrese el código OTP',
+  ),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingrese el código OTP';
+    }
+    if (value.length < 6) {
+      return 'El código esta incorrecto';
+    }
+    if (value.length > 6) {
+      return 'El código esta incorrecto';
+    }
+    return null;
+  },
+),
+
           SizedBox(height: MediaQuery.of(context).size.height * 0.15),
           ElevatedButton(
             onPressed: () {
