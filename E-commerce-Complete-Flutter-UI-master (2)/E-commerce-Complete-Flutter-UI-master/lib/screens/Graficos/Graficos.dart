@@ -154,11 +154,12 @@ class _Graficos extends State<Graficos> {
       ),
     ];
 
-    return charts.BarChart(
-      seriesList,
-      animate: true,
-      vertical: false,
-      barRendererDecorator: charts.BarLabelDecorator<String>(),
-    );
+   return charts.BarChart(
+  seriesList,
+  animate: true,
+  animationDuration: Duration(milliseconds: 500), // Duración de la animación
+  barRendererDecorator: charts.BarLabelDecorator<String>(),
+);
+
   }
 }
