@@ -92,16 +92,20 @@ class _SignUpFormState extends State<SignUpForm> {
                 },
               ),
              SizedBox(height: 16),
-              TextFormField(
-                onChanged: (value) => _usuarioViewModel.Usua_Contra = value,
-                decoration: InputDecoration(labelText: 'Contraseña Nueva'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa su nueva contraseña';
-                  }
-                  return null;
-                },
-              ),
+           TextFormField(
+  onChanged: (value) => _usuarioViewModel.Usua_Contra = value,
+  obscureText: true, // Hace que los caracteres ingresados se oculten
+  decoration: InputDecoration(
+    labelText: 'Contraseña Nueva',
+  ),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor ingresa su nueva contraseña';
+    }
+    return null;
+  },
+),
+
          
           FormError(errors: errors),
           const SizedBox(height: 20),

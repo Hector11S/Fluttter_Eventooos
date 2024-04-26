@@ -281,18 +281,21 @@ SizedBox(height: 16),
                   return null;
                 },
           ),
-          const SizedBox(height: 20),
-         TextFormField(
+                 const SizedBox(height: 20),
+ TextFormField(
   onChanged: (value) => _ClienteModel.Usua_Contra = value,
-  obscureText: true, // Oculta el texto ingresado
-  decoration: InputDecoration(labelText: 'Contraseña'),
+  obscureText: true, // Hace que los caracteres ingresados se oculten
+  decoration: InputDecoration(
+    labelText: 'Contraseña',
+  ),
   validator: (value) {
     if (value == null || value.isEmpty) {
-      return 'Por favor ingresa una contraseña';
+      return 'Por favor ingresa su nueva contraseña';
     }
     return null;
   },
 ),
+
         const SizedBox(height: 15),
 ElevatedButton(
   onPressed: () {
