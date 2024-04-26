@@ -138,6 +138,7 @@ class _InitScreenState extends State<InitScreen> {
             onTap: updateCurrentIndex,
             currentIndex: currentSelectedIndex,
             showSelectedLabels: false,
+            showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
             items: bottomNavBarItems,
           ),
