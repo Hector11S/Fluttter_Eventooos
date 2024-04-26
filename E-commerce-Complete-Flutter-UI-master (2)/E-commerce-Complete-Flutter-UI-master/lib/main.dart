@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Eventos HN',
       theme: AppTheme.lightTheme(context),
-      initialRoute: SplashScreen.routeName,
+      initialRoute: SplashScreen.routeName,  
       routes: routes,
     );
   }

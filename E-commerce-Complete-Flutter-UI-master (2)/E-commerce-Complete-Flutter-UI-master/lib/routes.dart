@@ -26,6 +26,8 @@ import 'screens/Utilerias/UtileriasHome.dart';
 import 'screens/Paquetes/Paquetes.dart';
 import 'screen/usuario_insertar.dart';
 import 'package:shop_app/screens/Carrito/CarritoScreen.dart';
+import 'package:shop_app/screens/Carrito/RealizarPedido.dart';
+import 'package:shop_app/screens/Carrito/pedidoPrinci.dart';
 
 final Map<String, WidgetBuilder> routes = {
   InitScreen.routeName: (context) => const InitScreen(),
@@ -53,4 +55,6 @@ final Map<String, WidgetBuilder> routes = {
   Paquetes.routeName: (context) => const Paquetes(),
   CrearUsuarioView.routeName: (context) => const CrearUsuarioView(),
   CarritoScreen.routeName: (context) => const CarritoScreen(),
+    RealizarPedidoForm.routeName: (context) => const RealizarPedidoForm(),
+    RealizarPedidoScreen.routeName: (context) => const RealizarPedidoScreen(),
 };

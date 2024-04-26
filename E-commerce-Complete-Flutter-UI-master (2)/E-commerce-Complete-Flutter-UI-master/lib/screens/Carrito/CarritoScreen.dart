@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:shop_app/screens/Carrito/RealizarPedido.dart';
+import 'package:shop_app/screens/Carrito/pedidoPrinci.dart';
 
 class CarritoScreen extends StatefulWidget {
   static const String routeName = '/Carritooo';
@@ -190,10 +192,12 @@ class _CarritoScreenState extends State<CarritoScreen> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _realizarPedido,
-              child: Text('Realizar pedido'),
-            ),
+           ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, RealizarPedidoScreen.routeName );
+                        },
+                        child: const Text("Continuar"),
+                      ),
           ],
         ),
       ),
