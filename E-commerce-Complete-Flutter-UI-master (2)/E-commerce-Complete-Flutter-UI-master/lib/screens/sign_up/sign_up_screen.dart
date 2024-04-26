@@ -23,7 +23,7 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 16),
-                  const Text("Restablecer", style: headingStyle),
+                  const Text("Restablecer Contraseña", style: headingStyle),
                   const SizedBox(height: 8),
                   Image.asset(
                     "assets/images/estelogosi.png",

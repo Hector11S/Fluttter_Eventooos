@@ -59,7 +59,7 @@ class _UsuarioDetallesScreenState extends State<UsuarioDetallesScreen> {
                 ListTile(title: Text('ID: ${usuario.Usua_Id}')),
                 ListTile(title: Text('Usuario: ${usuario.Usua_Usuario}')),
                
-                ListTile(title: Text('Nombre: ${usuario.Usua_Usuario}')),
+                ListTile(title: Text('Nombre: ${usuario.Clie_Id}')),
                 ListTile(title: Text('Rol: ${usuario.Role_Id}')),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
