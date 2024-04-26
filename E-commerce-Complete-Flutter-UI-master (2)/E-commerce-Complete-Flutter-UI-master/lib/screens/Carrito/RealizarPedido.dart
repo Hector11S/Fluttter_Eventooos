@@ -151,6 +151,10 @@ void initState() {
 
   @override
   Widget build(BuildContext context) {
+  final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+  final double subtotal = args['subtotal'];
+  final double total = args['total'];
+  final String utilIds = args['utilIds'];
     return Form(
       key: _formKey,
       child: Column(
@@ -298,8 +302,8 @@ DropdownButtonFormField<String>(
               ), 
              const SizedBox(height: 20),
             TextFormField(
-              onChanged: (value) {
-        
+          initialValue: subtotal.toString(),
+          onChanged: (value) {
                 try {
                   _ClienteModel.paDe_Subtotal = double.parse(value);
                 } catch (e) {
@@ -308,7 +312,7 @@ DropdownButtonFormField<String>(
                 }
               },
               decoration: InputDecoration(labelText: 'Subtotal'),
-              validator: (value) {
+          validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Por favor ingresa un Subtotal';
                 }
@@ -316,8 +320,9 @@ DropdownButtonFormField<String>(
               },
             ),
            const SizedBox(height: 20),
-            TextFormField(
-              onChanged: (value) {
+           TextFormField(
+          initialValue: total.toString(),
+          onChanged: (value) {
         
                 try {
                   _ClienteModel.paDe_Total = double.parse(value);
@@ -326,8 +331,8 @@ DropdownButtonFormField<String>(
                   print('Error al convertir a double: $e');
                 }
               },
-              decoration: InputDecoration(labelText: 'Total'),
-              validator: (value) {
+               decoration: InputDecoration(labelText: 'Total'),
+                validator: (value){
                 if (value == null || value.isEmpty) {
                   return 'Por favor ingresa un Total';
                 }
@@ -397,17 +402,21 @@ DropdownButtonFormField<String>(
                   return null;
                 },
           ),
-            const SizedBox(height: 20),
-          TextFormField(
-           onChanged: (value) => _ClienteModel.util_IdList = value,
-                decoration: InputDecoration(labelText: 'Utilerias'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa una Descripcion';
-                  }
-                  return null;
-                },
-          ),
+           const SizedBox(height: 20),
+            TextFormField(
+              initialValue: utilIds,
+              onChanged: (value) {
+                _ClienteModel.util_IdList = value;
+              },
+              decoration: InputDecoration(labelText: 'Utilerías'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor ingresa una Descripción';
+                }
+                return null;
+              },
+            ),
+
        
         const SizedBox(height: 10),
 ElevatedButton(

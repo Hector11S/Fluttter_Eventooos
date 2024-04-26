@@ -37,13 +37,23 @@ class _CarritoScreenState extends State<CarritoScreen> {
     await _guardarCarrito();
   }
 
-  void _actualizarCantidad(dynamic producto, int nuevaCantidad) async {
-    setState(() {
-      final index = _carrito.indexOf(producto);
-      _carrito[index]['cantidad'] = nuevaCantidad;
-    });
-    await _guardarCarrito();
-  }
+void _actualizarCantidad(dynamic producto, int nuevaCantidad) async {
+  setState(() {
+    final index = _carrito.indexOf(producto);
+    _carrito[index]['cantidad'] = nuevaCantidad;
+    _repetirIdUtileria(producto, nuevaCantidad);
+  });
+  await _guardarCarrito();
+}
+
+void _repetirIdUtileria(dynamic producto, int nuevaCantidad) {
+  final idUtileria = producto['util_Id'];
+  final List<String> idUtileriasRepetidos = List.generate(nuevaCantidad, (index) => idUtileria.toString());
+  final String utilIds = idUtileriasRepetidos.join(',');
+
+  producto['util_IdList'] = utilIds;
+}
+
 
   Future<void> _guardarCarrito() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -192,12 +202,26 @@ class _CarritoScreenState extends State<CarritoScreen> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
-           ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, RealizarPedidoScreen.routeName );
-                        },
-                        child: const Text("Continuar"),
-                      ),
+ElevatedButton(
+  onPressed: () {
+    final utilIds = _carrito
+        .map((item) => item['util_IdList'])
+        .where((utilId) => utilId != null) 
+        .join(',');
+
+    Navigator.pushNamed(
+      context,
+      RealizarPedidoForm.routeName,
+      arguments: {
+        'subtotal': _calcularTotal(),
+        'total': _calcularTotal(),
+        if (utilIds.isNotEmpty) 'utilIds': utilIds, 
+      },
+    );
+  },
+  child: const Text("Continuar"),
+),
+
           ],
         ),
       ),
