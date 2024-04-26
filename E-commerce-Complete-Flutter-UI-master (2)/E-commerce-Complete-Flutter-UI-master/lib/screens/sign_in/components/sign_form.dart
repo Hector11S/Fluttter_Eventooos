@@ -146,8 +146,8 @@ class _SignFormState extends State<SignForm> {
               return null;
             },
             decoration: const InputDecoration(
-              labelText: "Contraseñia",
-              hintText: "Ingrese su contraseñia",
+              labelText: "Contraseña",
+              hintText: "Ingrese su contraseña",
               // If  you are using latest version of flutter then lable text and hint text shown like this
               // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -172,7 +172,7 @@ class _SignFormState extends State<SignForm> {
                 onTap: () => Navigator.pushNamed(
                     context, ForgotPasswordScreen.routeName),
                 child: const Text(
-                  "Forgot Password",
+                  "Restablecer Contraseña",
                   style: TextStyle(decoration: TextDecoration.underline),
                 ),
               )

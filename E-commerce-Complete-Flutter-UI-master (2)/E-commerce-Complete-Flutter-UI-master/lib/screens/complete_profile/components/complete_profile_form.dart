@@ -21,7 +21,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   List<EstadoCivil> _civil = [];
   List<Municipio> _Muni = [];
   int? _selectedCivilId;
-  int? _selectedMuniId ;
+  String? _selectedMuniId ;
   String urlClienteregistro = "http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/Registrar";
   String urlCivil = "http://www.gestioneventooooss.somee.com/Api/Cliente/ListCivil";
   String urlMuni = "http://www.gestioneventooooss.somee.com/Api/Cliente/ListMuni";
@@ -195,28 +195,43 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                   return null;
                 },
           ),
-   Text("Sexo:"),
-    Radio<String>(
-      value: "F",
-      groupValue: _ClienteModel.Clie_Sexo,
-      onChanged: (value) {
-        setState(() {
-          _ClienteModel.Clie_Sexo = value!;
-        });
-      },
+Row(
+  children: [
+    Text(
+      "Sexo:",
+      style: TextStyle(fontSize: 15), // Modifica el tamaño de fuente aquí
     ),
-    Text("F"),
-    Radio<String>(
-      value: "M",
-      groupValue: _ClienteModel.Clie_Sexo,
-      onChanged: (value) {
-        setState(() {
-          _ClienteModel.Clie_Sexo = value!;
-        });
-      },
+    Row(
+      children: [
+        Radio<String>(
+          value: "F",
+          groupValue: _ClienteModel.Clie_Sexo,
+          onChanged: (value) {
+            setState(() {
+              _ClienteModel.Clie_Sexo = value!;
+            });
+          },
+        ),
+        Text("F"),
+      ],
     ),
-    Text("M"),
- SizedBox(height: 16),
+    Row(
+      children: [
+        Radio<String>(
+          value: "M",
+          groupValue: _ClienteModel.Clie_Sexo,
+          onChanged: (value) {
+            setState(() {
+              _ClienteModel.Clie_Sexo = value!;
+            });
+          },
+        ),
+        Text("M"),
+      ],
+    ),
+  ],
+),
+SizedBox(height: 16),
               DropdownButtonFormField<int>(
                 value: _selectedCivilId,
                 onChanged: (newValue) {
@@ -237,8 +252,25 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                   }
                   return null;
                 },
-              ), 
-               const SizedBox(height: 20),
+              ),        const SizedBox(height: 16),
+              const Text('Municipio', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+            value: _selectedMuniId,
+            onChanged: (String? newValue) {
+            setState(() {
+            _selectedMuniId = newValue;
+            _selectedMuniId = newValue ?? ''; // Aquí actualizamos el controlador del rol.
+            });
+            },
+            items: _Muni.map<DropdownMenuItem<String>>((Municipio mun) {
+              return DropdownMenuItem<String>(
+                value: mun.id,
+                child: Text(mun.nombre),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
           TextFormField(
            onChanged: (value) => _ClienteModel.Usua_Usuario = value,
                 decoration: InputDecoration(labelText: 'Usuario'),
@@ -249,6 +281,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                   return null;
                 },
           ),
+          const SizedBox(height: 20),
          TextFormField(
   onChanged: (value) => _ClienteModel.Usua_Contra = value,
   obscureText: true, // Oculta el texto ingresado
@@ -260,7 +293,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     return null;
   },
 ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
 ElevatedButton(
   onPressed: () {
     if (_formKey.currentState!.validate()) {
@@ -295,19 +328,17 @@ class EstadoCivil {
   }
 }
 
+
 class Municipio {
   final String id;
-  final String descripcion;
+  final String nombre;
 
-  Municipio({
-    required this.id,
-    required this.descripcion,
-  });
+  Municipio({required this.id, required this.nombre});
 
   factory Municipio.fromJson(Map<String, dynamic> json) {
     return Municipio(
       id: json['muni_Id'].toString(),
-      descripcion: json['muni_Descripcion'],
+      nombre: json['muni_Descripcion'],
     );
   }
 }
