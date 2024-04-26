@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/sign_in/components/sign_form.dart';
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 
 import '../../constants.dart';
 //import '../sign_in/sign_in_screen.dart';
@@ -74,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       const Spacer(flex: 2),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, InitScreen.routeName);
+                          Navigator.pushNamed(context, SignInScreen.routeName);
                         },
                         child: const Text("Continuar"),
                       ),

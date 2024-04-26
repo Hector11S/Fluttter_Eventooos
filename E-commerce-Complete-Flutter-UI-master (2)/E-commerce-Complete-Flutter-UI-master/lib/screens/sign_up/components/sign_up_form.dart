@@ -55,7 +55,7 @@ class _SignUpFormState extends State<SignUpForm> {
           print("Error al actualizar usuario: $errorMessage");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Error al actualizar usuario: $errorMessage"),
+              content: Text("Error al actualizar la nueva contraseña: $errorMessage"),
               backgroundColor: Colors.red,
             ),
           );
@@ -64,7 +64,7 @@ class _SignUpFormState extends State<SignUpForm> {
         print("Error: $e");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Error al actualizar usuario: $e"),
+            content: Text("Error al actualizar la contraseña: $e"),
             backgroundColor: Colors.red,
           ),
         );
@@ -94,10 +94,10 @@ class _SignUpFormState extends State<SignUpForm> {
              SizedBox(height: 16),
               TextFormField(
                 onChanged: (value) => _usuarioViewModel.Usua_Contra = value,
-                decoration: InputDecoration(labelText: 'Contraseña'),
+                decoration: InputDecoration(labelText: 'Contraseña Nueva'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa una contraseña';
+                    return 'Por favor ingresa su nueva contraseña';
                   }
                   return null;
                 },

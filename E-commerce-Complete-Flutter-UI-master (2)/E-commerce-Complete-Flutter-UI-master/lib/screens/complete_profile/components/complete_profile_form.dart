@@ -190,31 +190,32 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 decoration: InputDecoration(labelText: 'Correo'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa un numero de Telefono';
+                    return 'Por favor ingresa un correoElectronico';
                   }
                   return null;
                 },
           ),
-        const SizedBox(height: 20),
-DropdownButtonFormField<String>(
-  value: _ClienteModel.Clie_Sexo,
-  onChanged: (value) {
-    setState(() {
-      _ClienteModel.Clie_Sexo = value!;
-    });
-  },
-  items: [
-    DropdownMenuItem(child: Text("F"), value: "F"),
-    DropdownMenuItem(child: Text("M"), value: "M"),
-  ],
-  decoration: InputDecoration(labelText: 'Sexo'),
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Por favor selecciona el sexo';
-    }
-    return null;
-  },
-),
+   Text("Sexo:"),
+    Radio<String>(
+      value: "F",
+      groupValue: _ClienteModel.Clie_Sexo,
+      onChanged: (value) {
+        setState(() {
+          _ClienteModel.Clie_Sexo = value!;
+        });
+      },
+    ),
+    Text("F"),
+    Radio<String>(
+      value: "M",
+      groupValue: _ClienteModel.Clie_Sexo,
+      onChanged: (value) {
+        setState(() {
+          _ClienteModel.Clie_Sexo = value!;
+        });
+      },
+    ),
+    Text("M"),
  SizedBox(height: 16),
               DropdownButtonFormField<int>(
                 value: _selectedCivilId,
@@ -248,17 +249,17 @@ DropdownButtonFormField<String>(
                   return null;
                 },
           ),
-           const SizedBox(height: 20),
-          TextFormField(
-           onChanged: (value) => _ClienteModel.Usua_Contra = value,
-                decoration: InputDecoration(labelText: 'Contraseña'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa una contraseña';
-                  }
-                  return null;
-                },
-          ),
+         TextFormField(
+  onChanged: (value) => _ClienteModel.Usua_Contra = value,
+  obscureText: true, // Oculta el texto ingresado
+  decoration: InputDecoration(labelText: 'Contraseña'),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor ingresa una contraseña';
+    }
+    return null;
+  },
+),
         const SizedBox(height: 10),
 ElevatedButton(
   onPressed: () {

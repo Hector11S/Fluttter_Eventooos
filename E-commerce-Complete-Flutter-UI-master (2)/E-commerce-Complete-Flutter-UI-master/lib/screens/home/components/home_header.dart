@@ -23,17 +23,16 @@ Widget build(BuildContext context) {
         children: [
           const Expanded(child: SearchField()),
           const SizedBox(width: 16),
-          PopupMenuButton(
-            icon: SvgPicture.asset("assets/icons/User.svg"),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Text("Login"),
-                onTap: () {
-                  Navigator.pushNamed(context, SignInScreen.routeName);
-                },
-              ),
-            ],
-          ),
+        PopupMenuItem(
+          child: Text("Cerrar Sesión"),
+          onTap: () async {
+            // Eliminar datos de SharedPreferences
+       
+
+            // Navegar a la pantalla de inicio de sesión y reemplazar la pantalla actual
+            Navigator.pushReplacementNamed(context, SignInScreen.routeName);
+          },
+        ),
           const SizedBox(width: 8),
           IconBtnWithCounter(
             svgSrc: "assets/icons/Cart Icon.svg",

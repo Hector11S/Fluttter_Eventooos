@@ -1,69 +1,105 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shop_app/constants.dart';
-import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
-import 'package:shop_app/screens/login_success/login_success_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 import '../../../components/custom_surfix_icon.dart';
-import '../../../helper/keyboard.dart';
+import '../../../components/form_error.dart';
+import '../../../constants.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../../forgot_password/forgot_password_screen.dart';
+import '../../login_success/login_success_screen.dart';
 
 class SignForm extends StatefulWidget {
-  const SignForm({Key? key}) : super(key: key);
+  const SignForm({super.key});
 
   @override
   _SignFormState createState() => _SignFormState();
 }
 
 class _SignFormState extends State<SignForm> {
-  final String loginUrl =
-      'http://www.gestioneventooooss.somee.com/Api/Usuario/API/Usuario/IniciarSesion'; // URL de inicio de sesión
-
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usuarioController = TextEditingController();
-  TextEditingController contraController = TextEditingController();
+  final username = TextEditingController();
+  final contraname = TextEditingController();
+  String? Usuario;
+  String? Contra;
   bool? remember = false;
-  void _login() async {
-    try {
-      final response = await http.post(
-        Uri.parse(loginUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({
-          'usua_Usuario': usuarioController.text,
-          'usua_Contra': contraController.text,
-        }),
-      );
+  final List<String?> errors = [];
 
-      if (response.statusCode == 200) {
-        var jsonResponse = json.decode(response.body);
-        print('Response: $jsonResponse');
+  void addError({String? error}) {
+    if (!errors.contains(error)) {
+      setState(() {
+        errors.add(error);
+      });
+    }
+  }
 
-        bool success = jsonResponse['success'] ?? false;
-        if (success) {
-          // Inicio de sesión exitoso, navegar a la pantalla de éxito
-          Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-        } else {
-          // Inicio de sesión fallido, mostrar mensaje de error
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Usuario o contraseña incorrectos')),
-          );
+  Future<dynamic> Login() async{
+    final String url = "http://www.gestioneventooooss.somee.com/Api/Usuario/LoginHome?Usuario="+username.text+"&Contra="+contraname.text;
+    final result = await http.get(Uri.parse(url));
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    final Map<String, dynamic> responseData = json.decode(result.body);
+    final List<dynamic> reportesData = responseData['data'];
+
+    if(reportesData.isEmpty){
+      print(reportesData);
+                Navigator.pushNamed(context, SignInScreen.routeName);
+    }
+
+    else{
+
+    if(result.statusCode == 200){
+      final json = jsonDecode(result.body);
+
+          print(json['data']);
+
+      if (json['code'] == 200) {
+
+        if (json['data'] != null && json['data'].isNotEmpty) {
+
+          final userData = json['data'][0];
+            int userid = userData['usua_Id'];
+            sharedPreferences.setInt('IdUsuario', userid);
+            print(userid);
+          /*final saber = json['data'];
+
+          if(saber == 0){
+                        Navigator.push(context, MaterialPageRoute(builder: (home) =>  SignInScreen()));
+          } */
+
+         if (userData.containsKey('usua_Admin')) {
+  bool isAdmin = userData['usua_Admin'];
+  print(isAdmin);
+  if (isAdmin == true) {
+    sharedPreferences.setInt('Numero', 1);
+  } else {
+    sharedPreferences.setInt('Numero', 0); // Si el usuario no es administrador
+  }
+} else {
+  print("Error: 'usua_Admin' no está presente en los datos del usuario.");
+}
+
+        } 
+        else {
+            Navigator.push(context, MaterialPageRoute(builder: (home) =>  SignInScreen()));
         }
-      } else {
-        // Mostrar un mensaje de error si la solicitud no es exitosa
-        print('Error en la solicitud: ${response.statusCode}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Error en la solicitud: ${response.statusCode}')),
-        );
-      }
-    } catch (e) {
-      // Manejar errores de solicitud
-      print('Error al realizar la solicitud: $e');
-      print('Error al realizar la solicitud');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al realizar la solicitud: $e')),
-      );
+      } 
+
+    else {
+            Navigator.push(context, MaterialPageRoute(builder: (home) =>  SignInScreen()));
+    }
+
+     /* final SharedPreferences sharedPreferences = await SharedPreferences.getInstance(); */
+            Navigator.push(context, MaterialPageRoute(builder: (home) =>  LoginSuccessScreen()));
+    }
+    };
+  }
+
+  void removeError({String? error}) {
+    if (errors.contains(error)) {
+      setState(() {
+        errors.remove(error);
+      });
     }
   }
 
@@ -72,30 +108,53 @@ class _SignFormState extends State<SignForm> {
     return Form(
       key: _formKey,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFormField(
-            controller: usuarioController,
-            keyboardType: TextInputType.text,
+            controller: username,
+            onSaved: (newValue) => Usuario = newValue,
+          
             decoration: const InputDecoration(
               labelText: "Usuario",
-              hintText: "Ingresa tu Usuario",
+              hintText: "Ingresa tu usuario",
+              // If  you are using latest version of flutter then lable text and hint text shown like this
+              // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
+              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
             ),
           ),
           const SizedBox(height: 20),
           TextFormField(
-            controller: contraController,
+            controller: contraname,
             obscureText: true,
+            onSaved: (newValue) => Contra = newValue,
+            onChanged: (value) {
+              if (value.isNotEmpty) {
+                removeError(error: kPassNullError);
+              } else if (value.length >= 1) {
+                removeError(error: kShortPassError);
+              }
+              return;
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                addError(error: kPassNullError);
+                return "";
+              } else if (value.length < 1) {
+                addError(error: kShortPassError);
+                return "";
+              }
+              return null;
+            },
             decoration: const InputDecoration(
-              labelText: "Contraseña",
-              hintText: "Ingresa tu Contraseña",
+              labelText: "Contraseñia",
+              hintText: "Ingrese su contraseñia",
+              // If  you are using latest version of flutter then lable text and hint text shown like this
+              // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
-          ),const SizedBox(height: 20),
+          ),
+          const SizedBox(height: 20),
           Row(
             children: [
               Checkbox(
@@ -107,27 +166,23 @@ class _SignFormState extends State<SignForm> {
                   });
                 },
               ),
-              const Text("Recuerdame"),
+              const Text("Remember me"),
               const Spacer(),
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
                     context, ForgotPasswordScreen.routeName),
                 child: const Text(
-                  "Restablecer contraseña",
+                  "Forgot Password",
                   style: TextStyle(decoration: TextDecoration.underline),
                 ),
               )
             ],
           ),
-          const SizedBox(height: 20),
+          FormError(errors: errors),
+          const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _login();
-                KeyboardUtil.hideKeyboard(context);
-              }
-            },
-            child: const Text("Continuar"),
+            onPressed: Login,
+            child: const Text("Continue"),
           ),
         ],
       ),
