@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../cart/cart_screen.dart';
 import 'icon_btn_with_counter.dart';
@@ -27,10 +28,8 @@ Widget build(BuildContext context) {
           child: Text("Cerrar Sesión"),
           onTap: () async {
             // Eliminar datos de SharedPreferences
-       
+          Navigator.of(context).pushNamedAndRemoveUntil(SignInScreen.routeName, (route)=>false);
 
-            // Navegar a la pantalla de inicio de sesión y reemplazar la pantalla actual
-            Navigator.pushReplacementNamed(context, SignInScreen.routeName);
           },
         ),
           const SizedBox(width: 8),
