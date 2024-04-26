@@ -24,9 +24,18 @@ class _CarritoScreenState extends State<CarritoScreen> {
   Future<void> _cargarCarrito() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String carritoJson = prefs.getString('carrito') ?? '[]';
-    final List<dynamic> carrito = jsonDecode(carritoJson).cast<Map<String, dynamic>>();
+    final List<dynamic> carrito =
+        jsonDecode(carritoJson).cast<Map<String, dynamic>>();
     setState(() {
       _carrito.addAll(carrito.map((item) => item));
+    });
+  }
+
+  void _limpiarCarrito() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('carrito');
+    setState(() {
+      _carrito.clear();
     });
   }
 
@@ -37,23 +46,23 @@ class _CarritoScreenState extends State<CarritoScreen> {
     await _guardarCarrito();
   }
 
-void _actualizarCantidad(dynamic producto, int nuevaCantidad) async {
-  setState(() {
-    final index = _carrito.indexOf(producto);
-    _carrito[index]['cantidad'] = nuevaCantidad;
-    _repetirIdUtileria(producto, nuevaCantidad);
-  });
-  await _guardarCarrito();
-}
+  void _actualizarCantidad(dynamic producto, int nuevaCantidad) async {
+    setState(() {
+      final index = _carrito.indexOf(producto);
+      _carrito[index]['cantidad'] = nuevaCantidad;
+      _repetirIdUtileria(producto, nuevaCantidad);
+    });
+    await _guardarCarrito();
+  }
 
-void _repetirIdUtileria(dynamic producto, int nuevaCantidad) {
-  final idUtileria = producto['util_Id'];
-  final List<String> idUtileriasRepetidos = List.generate(nuevaCantidad, (index) => idUtileria.toString());
-  final String utilIds = idUtileriasRepetidos.join(',');
+  void _repetirIdUtileria(dynamic producto, int nuevaCantidad) {
+    final idUtileria = producto['util_Id'];
+    final List<String> idUtileriasRepetidos =
+        List.generate(nuevaCantidad, (index) => idUtileria.toString());
+    final String utilIds = idUtileriasRepetidos.join(',');
 
-  producto['util_IdList'] = utilIds;
-}
-
+    producto['util_IdList'] = utilIds;
+  }
 
   Future<void> _guardarCarrito() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,7 +86,7 @@ void _repetirIdUtileria(dynamic producto, int nuevaCantidad) {
   }
 
   void _realizarPedido() {
-
+    _limpiarCarrito();
     print('Pedido realizado');
   }
 
@@ -89,107 +98,117 @@ void _repetirIdUtileria(dynamic producto, int nuevaCantidad) {
       ),
       body: _carrito.isEmpty
           ? Center(
-        child: Text('El carrito está vacío.'),
-      )
+              child: Text('El carrito está vacío.'),
+            )
           : ListView.separated(
-        itemCount: _carrito.length,
-        separatorBuilder: (BuildContext context, int index) => Divider(),
-        itemBuilder: (context, index) {
-          final item = _carrito[index];
-          if (item.containsKey('util_Descripcion')) {
-            // Es un producto individual
-            final precioOriginal = item['util_Precio'] != null ? double.parse(item['util_Precio'].toString()) : 0.0;
+              itemCount: _carrito.length,
+              separatorBuilder: (BuildContext context, int index) => Divider(),
+              itemBuilder: (context, index) {
+                final item = _carrito[index];
+                if (item.containsKey('util_Descripcion')) {
+                  // Es un producto individual
+                  final precioOriginal = item['util_Precio'] != null
+                      ? double.parse(item['util_Precio'].toString())
+                      : 0.0;
 
-            final subtotal = (precioOriginal ?? 0.0) * (item['cantidad'] ?? 0);
+                  final subtotal =
+                      (precioOriginal ?? 0.0) * (item['cantidad'] ?? 0);
 
-            return ListTile(
-              leading: Image.network(
-                item['util_Imagen'],
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(item['util_Descripcion']),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Precio Unitario: \L.${precioOriginal.toStringAsFixed(2)}'),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          if (item['cantidad'] > 1) {
-                            _actualizarCantidad(item, item['cantidad'] - 1);
-                          }
-                        },
-                      ),
-                      Text(item['cantidad'].toString()),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          _actualizarCantidad(item, item['cantidad'] + 1);
-                        },
-                      ),
-                    ],
-                  ),
-                  Text('Subtotal: \L.${subtotal.toStringAsFixed(2)}'),
-                ],
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  _eliminarDelCarrito(item);
-                },
-              ),
-            );
-          } else if (item.containsKey('paquete')) {
-            // Es un paquete
-            final precioPaquete = item['precio'] != null ? double.parse(item['precio'].toString()) : 0.0;
+                  return ListTile(
+                    leading: Image.network(
+                      item['util_Imagen'],
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    title: Text(item['util_Descripcion']),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            'Precio Unitario: \L.${precioOriginal.toStringAsFixed(2)}'),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                if (item['cantidad'] > 1) {
+                                  _actualizarCantidad(
+                                      item, item['cantidad'] - 1);
+                                }
+                              },
+                            ),
+                            Text(item['cantidad'].toString()),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                _actualizarCantidad(item, item['cantidad'] + 1);
+                              },
+                            ),
+                          ],
+                        ),
+                        Text('Subtotal: \L.${subtotal.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        _eliminarDelCarrito(item);
+                      },
+                    ),
+                  );
+                } else if (item.containsKey('paquete')) {
+                  // Es un paquete
+                  final precioPaquete = item['precio'] != null
+                      ? double.parse(item['precio'].toString())
+                      : 0.0;
 
-            final subtotal = precioPaquete * (item['cantidad'] ?? 0);
+                  final subtotal = precioPaquete * (item['cantidad'] ?? 0);
 
-            return ListTile(
-              leading: Icon(Icons.card_giftcard, size: 50), // Icono de paquete
-              title: Text(item['paquete']),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Precio del paquete: \L.${precioPaquete.toStringAsFixed(2)}'),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          if (item['cantidad'] > 1) {
-                            _actualizarCantidad(item, item['cantidad'] - 1);
-                          }
-                        },
-                      ),
-                      Text(item['cantidad'].toString()),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          _actualizarCantidad(item, item['cantidad'] + 1);
-                        },
-                      ),
-                    ],
-                  ),
-                  Text('Subtotal: \L.${subtotal.toStringAsFixed(2)}'),
-                ],
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  _eliminarDelCarrito(item);
-                },
-              ),
-            );
-          } else {
-            return SizedBox.shrink(); //si hay error
-          }
-        },
-      ),
+                  return ListTile(
+                    leading:
+                        Icon(Icons.card_giftcard, size: 50), // Icono de paquete
+                    title: Text(item['paquete']),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            'Precio del paquete: \L.${precioPaquete.toStringAsFixed(2)}'),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                if (item['cantidad'] > 1) {
+                                  _actualizarCantidad(
+                                      item, item['cantidad'] - 1);
+                                }
+                              },
+                            ),
+                            Text(item['cantidad'].toString()),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                _actualizarCantidad(item, item['cantidad'] + 1);
+                              },
+                            ),
+                          ],
+                        ),
+                        Text('Subtotal: \L.${subtotal.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        _eliminarDelCarrito(item);
+                      },
+                    ),
+                  );
+                } else {
+                  return SizedBox.shrink(); //si hay error
+                }
+              },
+            ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -202,26 +221,25 @@ void _repetirIdUtileria(dynamic producto, int nuevaCantidad) {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 10),
-ElevatedButton(
-  onPressed: () {
-    final utilIds = _carrito
-        .map((item) => item['util_IdList'])
-        .where((utilId) => utilId != null) 
-        .join(',');
+            ElevatedButton(
+              onPressed: () {
+                final utilIds = _carrito
+                    .map((item) => item['util_IdList'])
+                    .where((utilId) => utilId != null)
+                    .join(',');
 
-    Navigator.pushNamed(
-      context,
-      RealizarPedidoForm.routeName,
-      arguments: {
-        'subtotal': _calcularTotal(),
-        'total': _calcularTotal(),
-        if (utilIds.isNotEmpty) 'utilIds': utilIds, 
-      },
-    );
-  },
-  child: const Text("Continuar"),
-),
-
+                Navigator.pushNamed(
+                  context,
+                  RealizarPedidoForm.routeName,
+                  arguments: {
+                    'subtotal': _calcularTotal(),
+                    'total': _calcularTotal(),
+                    if (utilIds.isNotEmpty) 'utilIds': utilIds,
+                  },
+                );
+              },
+              child: const Text("Continuar"),
+            ),
           ],
         ),
       ),

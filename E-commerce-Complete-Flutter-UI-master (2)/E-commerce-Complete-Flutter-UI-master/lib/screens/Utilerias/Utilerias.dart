@@ -70,16 +70,18 @@ class _UtileriasState extends State<Utilerias> {
         _carrito.any((item) => item['util_Id'] == producto['util_Id']);
 
     if (yaEstaEnCarrito) {
-      _mostrarSnackBar('Este producto ya está en el carrito.', Colors.green);
+      _mostrarSnackBar('Este producto ya está en el carrito.',
+          const Color.fromARGB(255, 83, 83, 83));
       return;
     }
+
+    producto['cantidad'] = 1;
 
     setState(() {
       _carrito.add(producto);
     });
     await _guardarCarrito();
 
-   
     _mostrarSnackBar('Producto añadido al carrito', Colors.green);
   }
 
