@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "E-commerce-Complete-Flutter-UI-master",
+            "cwd": "E-commerce-Complete-Flutter-UI-master (2)\\E-commerce-Complete-Flutter-UI-master",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "E-commerce-Complete-Flutter-UI-master (profile mode)",
+            "cwd": "E-commerce-Complete-Flutter-UI-master (2)\\E-commerce-Complete-Flutter-UI-master",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "E-commerce-Complete-Flutter-UI-master (release mode)",
+            "cwd": "E-commerce-Complete-Flutter-UI-master (2)\\E-commerce-Complete-Flutter-UI-master",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
